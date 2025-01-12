@@ -12,18 +12,18 @@ public class VinylPlatesService : IVinylPlatesService
         _vinylPlatesRepository = vinylPlatesRepository;
     }
 
-    public async Task<List<VinylPlate>> GetAllVinylPlates()
+    public async Task<List<VinylPlate>> GetAll()
     {
-        return await _vinylPlatesRepository.Get();
+        return await _vinylPlatesRepository.GetAll();
     }
 
-    public async Task<Guid> CreateVinylPlate(VinylPlate vinylPlate)
+    public async Task<Guid> Create(VinylPlate vinylPlate)
     {
         return await _vinylPlatesRepository.Create(vinylPlate);
     }
 
-    public async Task<Guid> UpdateVinylPlate(Guid id, Guid albumId, string condition, string description,
-        string format, string coverUrl, string manufacturer, int price, int printYear)
+    public async Task<Guid> Update(Guid id, Guid albumId, string condition, string description,
+        string format, string coverUrl, string manufacturer, decimal price, int printYear)
     {
         return await _vinylPlatesRepository.Update(id, albumId, condition, description, format, coverUrl, manufacturer,
             price, printYear);

@@ -18,5 +18,10 @@ public class VinylPlateConfiguration : IEntityTypeConfiguration<VinylPlateEntity
         builder.Property(x => x.Format).IsRequired();
         builder.Property(x => x.CoverUrl).IsRequired();
         builder.Property(x => x.Manufacturer).IsRequired();
+        
+        builder
+            .HasOne(x => x.Album)
+            .WithMany(x => x.VinylPlates)
+            .HasForeignKey(x => x.AlbumId);
     }
 }

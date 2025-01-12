@@ -1,7 +1,6 @@
 namespace VinylStore.Contracts;
 
-public record VinylPlatesResponse(
-    Guid Id,
+public record VinylPlatesRequest(
     Guid AlbumId,
     string CoverUrl,
     string Format,
@@ -10,5 +9,3 @@ public record VinylPlatesResponse(
     int PrintYear,
     decimal Price, 
     string Manufacturer);
-    
-    

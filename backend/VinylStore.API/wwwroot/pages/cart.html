@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Корзина - Виниловый магазин</title>
+    <link rel="stylesheet" href="../styles/cart.css" />
+    <style></style>
+  </head>
+  <body>
+    <header>
+      <div class="logo">Виниловый Магазин</div>
+      <nav>
+        <ul>
+          <li><a href="index.html">Главная</a></li>
+          <li><a href="catalog.html">Каталог</a></li>
+          <li><a href="cart.html" class="active">Корзина</a></li>
+          <li><a href="care.html">Уход за винилом</a></li>
+          <li><a href="add_vinyl.html">Добавить пластинку</a></li>
+          <li><a href="about.html">О нас</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <h1>Корзина пластинок</h1>
+      <div class="cart-container">
+        <table class="cart-table">
+          <thead>
+            <tr>
+              <th>Обложка</th>
+              <th>Название</th>
+              <th>Исполнитель</th>
+              <th>Год</th>
+              <th>Цена</th>
+              <th>Количество</th>
+              <th>Итого</th>
+              <th>Действия</th>
+            </tr>
+          </thead>
+          <tbody id="cart-items">
+            <tr>
+              <td>
+                <div class="img-container">
+                  <a href="vinyl1.html">
+                    <img
+                      src="../images/joydivisionUnknownPleasures.jpg"
+                      alt="обложка Unknown Pleasures"
+                      class="album-cover"
+                    />
+                  </a>
+                </div>
+              </td>
+              <td>Unknown Pleasures</td>
+              <td>Joy Division</td>
+              <td>1979</td>
+              <td class="price">1500</td>
+              <td>
+                <input type="number" class="quantity" value="1" min="1" />
+              </td>
+              <td class="total">1500</td>
+              <td>
+                <button class="remove-btn">Удалить</button>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <div class="img-container">
+                  <a href="vinyl2.html">
+                    <img
+                      src="../images/cureSongsOfTheLostWorld.webp"
+                      alt="обложка Closer"
+                      class="album-cover"
+                    />
+                  </a>
+                </div>
+              </td>
+              <td>Songs of the Lost World</td>
+              <td>The Cure</td>
+              <td>2024</td>
+              <td class="price">2500</td>
+              <td>
+                <input type="number" class="quantity" value="1" min="1" />
+              </td>
+              <td class="total">1800</td>
+              <td>
+                <button class="remove-btn">Удалить</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="cart-summary">
+          <h3>Общая сумма: <span id="grand-total">1500</span> руб.</h3>
+          <button class="checkout-btn">Оформить заказ</button>
+        </div>
+      </div>
+    </main>
+
+    <footer>
+      <p>&copy; 2024 Виниловый Магазин. Все права защищены.</p>
+    </footer>
+
+    <script>
+      const cartItems = document.getElementById("cart-items");
+      const grandTotal = document.getElementById("grand-total");
+
+      function updateTotals() {
+        let totalSum = 0;
+        const rows = cartItems.querySelectorAll("tr");
+
+        rows.forEach((row) => {
+          const price = parseFloat(row.querySelector(".price").textContent);
+          const quantity = parseInt(row.querySelector(".quantity").value);
+          const totalCell = row.querySelector(".total");
+          const itemTotal = price * quantity;
+          totalCell.textContent = itemTotal;
+          totalSum += itemTotal;
+        });
+
+        grandTotal.textContent = totalSum;
+      }
+
+      cartItems.addEventListener("input", (event) => {
+        if (event.target.classList.contains("quantity")) {
+          updateTotals();
+        }
+      });
+
+      cartItems.addEventListener("click", (event) => {
+        if (event.target.classList.contains("remove-btn")) {
+          const row = event.target.closest("tr");
+          row.remove();
+          updateTotals();
+        }
+      });
+
+      updateTotals();
+    </script>
+  </body>
+</html>

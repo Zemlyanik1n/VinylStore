@@ -14,7 +14,7 @@ public class VinylPlatesRepository : IVinylPlatesRepository
         _context = context;
     }
 
-    public async Task<List<VinylPlate>> Get()
+    public async Task<List<VinylPlate>> GetAll()
     {
         var vinylPlatesEntities = await _context.VinylPlates
             .AsNoTracking()
@@ -48,7 +48,7 @@ public class VinylPlatesRepository : IVinylPlatesRepository
     }
 
     public async Task<Guid> Update(Guid id, Guid albumId, string condition, string description,
-        string format, string coverUrl, string manufacturer, int price, int printYear)
+        string format, string coverUrl, string manufacturer, decimal price, int printYear)
     {
         await _context.VinylPlates
             .Where(v => v.Id == id)
