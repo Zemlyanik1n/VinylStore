@@ -17,7 +17,11 @@ public class VinylStoreDbContext(DbContextOptions<VinylStoreDbContext> options) 
     {
         modelBuilder.ApplyConfiguration(new AlbumConfiguration());
         modelBuilder.ApplyConfiguration(new VinylPlateConfiguration());
-        
+        modelBuilder.ApplyConfiguration(new GenreConfiguration());
+        modelBuilder.ApplyConfiguration(new OrderConfiguration());
+        modelBuilder.ApplyConfiguration(new TrackConfiguration());
+        modelBuilder.ApplyConfiguration(new UserConfiguration());
+        modelBuilder.ApplyConfiguration(new DeliveryAddressConfiguration());
         
         base.OnModelCreating(modelBuilder);
     }

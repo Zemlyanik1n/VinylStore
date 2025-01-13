@@ -10,4 +10,5 @@ public class UserEntity
     public string LastName { get; set; } = string.Empty;
     public string Password { get; set; } = string.Empty;
     public List<DeliveryAddressEntity>? DeliveryAddresses { get; set; } = [];
+    public List<OrderEntity>? Orders { get; set; } = [];
 }

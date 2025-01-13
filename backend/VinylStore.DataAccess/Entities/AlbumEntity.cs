@@ -9,7 +9,7 @@ public class AlbumEntity
     public string Description { get; set; } = string.Empty;
     public int Duration { get; set; } = 0;
     public int ReleaseYear { get; set; } = 0;
-    public List<GenreEntity>? Genres { get; set; } = [];
-    public List<VinylPlateEntity>? VinylPlates { get; set; } = [];
-    public List<TrackEntity>? Tracks { get; set; } = [];
+    public List<GenreEntity>? Genres { get;} = [];
+    public List<VinylPlateEntity>? VinylPlates { get;} = [];
+    public List<TrackEntity>? Tracks { get;} = [];
 }

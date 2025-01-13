@@ -8,7 +8,8 @@ public class OrderEntity
     public decimal TotalPrice { get; set; } = 0;
     public Guid UserId { get; set; }
     public UserEntity? User { get; set; }
-    public Guid VinylPlateId { get; set; }
     public List<VinylPlateEntity>? VinylPlates { get; set; } = [];
+    public DeliveryAddressEntity? DeliveryAddress { get; set; }
+    public Guid DeliveryAddressId { get; set; }
 
 }

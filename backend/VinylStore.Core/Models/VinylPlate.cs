@@ -4,7 +4,7 @@ public class VinylPlate
 {
     private const int MinimalPrintYear = 1900;
     private VinylPlate(Guid id, Guid albumId, string condition, string description, string format, string coverUrl, 
-        string manufacturer, decimal price, int printYear)
+        string manufacturer, decimal price, int printYear, int count)
     {
         Id = id;
         AlbumId = albumId;
@@ -15,6 +15,7 @@ public class VinylPlate
         Price = price;
         Manufacturer = manufacturer;
         PrintYear = printYear;
+        Count = count;
     }
 
     public Guid Id { get;}
@@ -26,9 +27,11 @@ public class VinylPlate
     public string Description { get; } = string.Empty;
     public decimal Price { get; } = 0;
     public int PrintYear { get; } = MinimalPrintYear;
+    
+    public int Count { get; set; } = 0;
 
     public static (VinylPlate VinylPlate, string Error) Create(Guid id, Guid albumId, string condition, string description, string format,
-        string coverUrl, string manufacturer, decimal price, int printYear)
+        string coverUrl, string manufacturer, decimal price, int printYear, int count)
     {
         var error = string.Empty;
         if (string.IsNullOrEmpty(condition))
@@ -36,7 +39,8 @@ public class VinylPlate
             error = "Condition is required";
         }
         
-        var vinylPlate = new VinylPlate(id, albumId, condition, description, format, coverUrl, manufacturer, price, printYear);
+        var vinylPlate = new VinylPlate(id, albumId, condition, description, format,
+            coverUrl, manufacturer, price, printYear, count);
 
         return (vinylPlate, error);
     }

@@ -13,5 +13,8 @@ public class VinylPlateEntity
     public decimal Price { get; set; } = 0;
     public int PrintYear { get; set; } = MinimalPrintYear;
 
+    public int Count { get; set; } = 0;
+
     public AlbumEntity? Album { get; set; }
+    public List<OrderEntity>? Orders { get; set; } = [];
 }

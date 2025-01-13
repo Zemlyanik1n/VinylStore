@@ -9,6 +9,7 @@ public record VinylPlatesResponse(
     string Description,
     int PrintYear,
     decimal Price, 
-    string Manufacturer);
+    string Manufacturer,
+    int Count);
     
     

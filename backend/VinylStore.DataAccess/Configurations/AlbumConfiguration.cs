@@ -9,10 +9,6 @@ public class AlbumConfiguration : IEntityTypeConfiguration<AlbumEntity>
     public void Configure(EntityTypeBuilder<AlbumEntity> builder)
     {
         builder.HasKey(x => x.Id);
-        builder.Property(x => x.Id).IsRequired();
-        builder.Property(x => x.Description).IsRequired();
-        builder.Property(x => x.Duration).IsRequired();
-        builder.Property(x => x.ArtistName).IsRequired();
 
         builder
             .HasMany(g => g.Genres)

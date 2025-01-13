@@ -10,6 +10,6 @@ public class DeliveryAddressEntity
     public string StreetNumber { get; set; } = string.Empty;
     public int FlatNumber { get; set; } = 0;
     public Guid UserId { get; set; }
-    public UserEntity? User { get; set; }
+    public List<UserEntity>? Users { get; set; }
     public List<OrderEntity>? Orders { get; set; } = [];
 }

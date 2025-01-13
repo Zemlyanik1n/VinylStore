@@ -21,7 +21,7 @@ public class VinylPlatesRepository : IVinylPlatesRepository
             .ToListAsync();
         var vinylPlates = vinylPlatesEntities
             .Select(v => VinylPlate.Create(v.Id, v.AlbumId, v.Condition, v.Description, v.Format, v.CoverUrl, v.Manufacturer,
-                v.Price, v.PrintYear).VinylPlate)
+                v.Price, v.PrintYear, v.Count).VinylPlate)
             .ToList();
         return vinylPlates;
     }
@@ -39,6 +39,7 @@ public class VinylPlatesRepository : IVinylPlatesRepository
             Manufacturer = vinylPlate.Manufacturer,
             Price = vinylPlate.Price,
             PrintYear = vinylPlate.PrintYear,
+            Count = vinylPlate.Count
         };
         
         await _context.AddAsync(vinylPlateEntity);

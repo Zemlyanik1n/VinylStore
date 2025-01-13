@@ -21,7 +21,7 @@ public class VinylPlatesController : ControllerBase
     {
         var vinylPlates = await _vinylPlatesService.GetAll();
         var response = vinylPlates.Select(v => new VinylPlatesResponse(v.Id, v.AlbumId,
-            v.CoverUrl, v.Format, v.Condition, v.Description, v.PrintYear, v.Price, v.Manufacturer)).ToList();
+            v.CoverUrl, v.Format, v.Condition, v.Description, v.PrintYear, v.Price, v.Manufacturer, v.Count)).ToList();
         
         return Ok(response);
     }
@@ -30,7 +30,8 @@ public class VinylPlatesController : ControllerBase
     public async Task<ActionResult<Guid>> AddVinylPlate([FromBody] VinylPlatesRequest request)
     {
         var (vinylPlates, error) = VinylPlate.Create(Guid.NewGuid(), request.AlbumId,
-            request.Condition, request.Description, request.Format, request.CoverUrl, request.Manufacturer, request.Price, request.PrintYear);
+            request.Condition, request.Description, request.Format, request.CoverUrl,
+            request.Manufacturer, request.Price, request.PrintYear, request.Count);
         if (!string.IsNullOrEmpty(error))
         {
             return BadRequest(error);
