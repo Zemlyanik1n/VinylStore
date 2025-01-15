@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VinylStore.DataAccess.Entities;
+using VinylStore.Core.Models;
 
-namespace VinylStore.DataAccess.Configurations;
+namespace VinylStore.Persistence.Configurations;
 
-public class VinylPlateConfiguration : IEntityTypeConfiguration<VinylPlateEntity>
+public class VinylPlateConfiguration : IEntityTypeConfiguration<VinylPlate>
 {
-    public void Configure(EntityTypeBuilder<VinylPlateEntity> builder)
+    public void Configure(EntityTypeBuilder<VinylPlate> builder)
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();
@@ -16,8 +16,8 @@ public class VinylPlateConfiguration : IEntityTypeConfiguration<VinylPlateEntity
             .WithMany(x => x.VinylPlates)
             .HasForeignKey(x => x.AlbumId);
 
-        builder
-            .HasMany(o => o.Orders)
-            .WithMany(o => o.VinylPlates);
+        // builder
+        //     .HasMany(o => o.Orders)
+        //     .WithMany(o => o.VinylPlates);
     }
 }

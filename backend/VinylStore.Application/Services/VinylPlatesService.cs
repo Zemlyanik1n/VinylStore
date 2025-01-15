@@ -12,7 +12,7 @@ public class VinylPlatesService : IVinylPlatesService
         _vinylPlatesRepository = vinylPlatesRepository;
     }
 
-    public async Task<List<VinylPlate>> GetAll()
+    public async Task<IEnumerable<VinylPlate>> GetAll()
     {
         return await _vinylPlatesRepository.GetAll();
     }
@@ -23,10 +23,10 @@ public class VinylPlatesService : IVinylPlatesService
     }
 
     public async Task<Guid> Update(Guid id, Guid albumId, string condition, string description,
-        string format, string coverUrl, string manufacturer, decimal price, int printYear)
+        string format, string coverUrl, string manufacturer, decimal price, int printYear, int count)
     {
         return await _vinylPlatesRepository.Update(id, albumId, condition, description, format, coverUrl, manufacturer,
-            price, printYear);
+            price, printYear, count);
     }
 
     public async Task<Guid> Delete(Guid id)

@@ -4,9 +4,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinylStore.API", "VinylStor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinylStore.Core", "VinylStore.Core\VinylStore.Core.csproj", "{7CA1AF47-9549-4D4C-83D1-E13BE956FD5C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinylStore.DataAccess", "VinylStore.DataAccess\VinylStore.DataAccess.csproj", "{AC72A747-5D7B-4887-92B9-84C31E5269AC}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinylStore.Application", "VinylStore.Application\VinylStore.Application.csproj", "{70D69CCC-17DD-441F-8666-1D37B3534AC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VinylStore.Persistence", "VinylStore.Infrastructure\VinylStore.Persistence\VinylStore.Persistence.csproj", "{9A5FF151-CF2C-4D82-9416-8428F794F48E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,13 +22,13 @@ Global
 		{7CA1AF47-9549-4D4C-83D1-E13BE956FD5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7CA1AF47-9549-4D4C-83D1-E13BE956FD5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7CA1AF47-9549-4D4C-83D1-E13BE956FD5C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{AC72A747-5D7B-4887-92B9-84C31E5269AC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{AC72A747-5D7B-4887-92B9-84C31E5269AC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{AC72A747-5D7B-4887-92B9-84C31E5269AC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{AC72A747-5D7B-4887-92B9-84C31E5269AC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{70D69CCC-17DD-441F-8666-1D37B3534AC4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{70D69CCC-17DD-441F-8666-1D37B3534AC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{70D69CCC-17DD-441F-8666-1D37B3534AC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{70D69CCC-17DD-441F-8666-1D37B3534AC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9A5FF151-CF2C-4D82-9416-8428F794F48E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9A5FF151-CF2C-4D82-9416-8428F794F48E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9A5FF151-CF2C-4D82-9416-8428F794F48E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9A5FF151-CF2C-4D82-9416-8428F794F48E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

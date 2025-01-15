@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using VinylStore.Application.Services;
 using VinylStore.Contracts;
+using VinylStore.Core.Abstractions;
 using VinylStore.Core.Models;
 
 namespace VinylStore.Controllers;
@@ -45,7 +46,7 @@ public class VinylPlatesController : ControllerBase
     public async Task<ActionResult<Guid>> UpdateVinylPlate(Guid id, [FromBody] VinylPlatesRequest request)
     {
         var updatedVinylPlateId = await _vinylPlatesService.Update(id, request.AlbumId, request.Condition, request.Description, 
-            request.Format, request.CoverUrl, request.Manufacturer, request.Price, request.PrintYear);
+            request.Format, request.CoverUrl, request.Manufacturer, request.Price, request.PrintYear, request.Count);
         return Ok(updatedVinylPlateId);
     }
 

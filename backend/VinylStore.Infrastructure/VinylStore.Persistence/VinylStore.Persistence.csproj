@@ -4,6 +4,7 @@
         <TargetFramework>net9.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <PackageId>VinylStore.Persistence</PackageId>
     </PropertyGroup>
 
     <ItemGroup>
@@ -16,7 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VinylStore.Core\VinylStore.Core.csproj" />
+      <ProjectReference Include="..\..\VinylStore.Core\VinylStore.Core.csproj" />
     </ItemGroup>
 
 </Project>

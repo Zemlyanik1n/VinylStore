@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VinylStore.DataAccess.Entities;
+using VinylStore.Core.Models;
 
-namespace VinylStore.DataAccess.Configurations;
+namespace VinylStore.Persistence.Configurations;
 
-public class TrackConfiguration : IEntityTypeConfiguration<TrackEntity>
+public class TrackConfiguration : IEntityTypeConfiguration<Track>
 {
-    public void Configure(EntityTypeBuilder<TrackEntity> builder)
+    public void Configure(EntityTypeBuilder<Track> builder)
     {
         builder.HasKey(x => x.Id);
         

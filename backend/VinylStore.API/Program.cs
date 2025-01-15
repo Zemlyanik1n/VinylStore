@@ -1,8 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VinylStore.Application.Services;
 using VinylStore.Core.Abstractions;
-using VinylStore.DataAccess;
-using VinylStore.DataAccess.Repositories;
+using VinylStore.Persistence;
+using VinylStore.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 

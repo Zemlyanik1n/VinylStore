@@ -1,17 +1,17 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using VinylStore.DataAccess.Configurations;
-using VinylStore.DataAccess.Entities;
+using VinylStore.Core.Models;
+using VinylStore.Persistence.Configurations;
 
-namespace VinylStore.DataAccess;
+namespace VinylStore.Persistence;
 public class VinylStoreDbContext(DbContextOptions<VinylStoreDbContext> options) : DbContext(options)
 {
-    public DbSet<AlbumEntity> Albums { get; set; }
-    public DbSet<DeliveryAddressEntity> DeliveryAddresses { get; set; }
-    public DbSet<GenreEntity> Genres { get; set; }
-    public DbSet<OrderEntity> Orders { get; set; }
-    public DbSet<TrackEntity> Tracks { get; set; }
-    public DbSet<UserEntity> Users { get; set; }
-    public DbSet<VinylPlateEntity> VinylPlates { get; set; }
+    public DbSet<Album> Albums { get; set; }
+    public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
+    public DbSet<Genre> Genres { get; set; }
+    public DbSet<Order> Orders { get; set; }
+    public DbSet<Track> Tracks { get; set; }
+    public DbSet<User> Users { get; set; }
+    public DbSet<VinylPlate> VinylPlates { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
