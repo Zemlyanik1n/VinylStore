@@ -5,7 +5,7 @@ using VinylStore.Core.Models;
 
 namespace VinylStore.Persistence.Repositories;
 
-public class TrackRepository(VinylStoreDbContext context) : ITrackRepository
+public class TracksRepository(VinylStoreDbContext context) : ITracksRepository
 {
     private readonly VinylStoreDbContext _context = context;
     
@@ -33,12 +33,19 @@ public class TrackRepository(VinylStoreDbContext context) : ITrackRepository
     public async Task Update(Guid id, Track track, CancellationToken ct)
     {
         await _context.Tracks
-            .Where(t => t.Id == track.Id)
-            
+            .Where(t => t.Id == id)
+            .ExecuteUpdateAsync(t => t
+                .SetProperty(p => p.Name, track.Name)
+                .SetProperty(p => p.Position, track.Position)
+                .SetProperty(p => p.Album, track.Album)
+                .SetProperty(p => p.Duration, track.Duration)
+                .SetProperty(p => p.AlbumId, track.AlbumId), ct);
     }
 
-    public Task Delete(Guid id, CancellationToken ct)
+    public async Task Delete(Guid id, CancellationToken ct)
     {
-        throw new NotImplementedException();
+        await _context.Tracks
+            .Where(t => t.Id == id)
+            .ExecuteDeleteAsync(ct);
     }
 }

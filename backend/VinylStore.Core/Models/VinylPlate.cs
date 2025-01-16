@@ -27,11 +27,11 @@ public class VinylPlate
     public string Description { get;set; } 
     public decimal Price { get; set;}
     public int PrintYear { get; set;}
-    public int Count { get;set;} 
-
+    public int Count { get;set;}
+    
     public virtual Album? Album { get; set;}
-    public virtual ICollection<Order>? Orders { get;set; } = [];
 
+    // написать отдельный валидатор
     public static (VinylPlate VinylPlate, string Error) Create(Guid id, Guid albumId, string condition, string description, string format,
         string coverUrl, string manufacturer, decimal price, int printYear, int count)
     {

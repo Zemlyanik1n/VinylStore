@@ -12,17 +12,12 @@ public class OrderConfiguration : IEntityTypeConfiguration<Order>
 
         builder
             .HasMany(v => v.VinylPlates)
-            .WithMany(o => o.Orders);
+            .WithMany();
 
-        builder
-            .HasOne(u => u.User)
-            .WithMany(o => o.Orders)
-            .HasForeignKey(u => u.UserId);
-
+        // добавить еще один слой с entities для работы с бд.
         builder
             .HasOne(d => d.DeliveryAddress)
-            .WithMany(o => o.Orders)
+            .WithMany()
             .HasForeignKey(d => d.DeliveryAddressId);
-
     }
 }

@@ -9,9 +9,5 @@ public class GenreConfiguration : IEntityTypeConfiguration<Genre>
     public void Configure(EntityTypeBuilder<Genre> builder)
     {
         builder.HasKey(g => g.Id);
-
-        // builder
-        //     .HasMany(g => g.Albums)
-        //     .WithMany(a => a.Genres);
     }
 }

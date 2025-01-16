@@ -2,6 +2,10 @@ namespace VinylStore.Core.Models;
 
 public class Order
 {
+    private Order()
+    {
+        
+    }
     public Guid Id { get; set; }
     public DateTime DateOfOrder { get; }
     public DateTime DateOfDelivery { get; }

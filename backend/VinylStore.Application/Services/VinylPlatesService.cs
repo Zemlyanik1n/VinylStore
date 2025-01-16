@@ -1,4 +1,6 @@
 ﻿using VinylStore.Core.Abstractions;
+using VinylStore.Core.Abstractions.Repositories;
+using VinylStore.Core.Abstractions.Services;
 using VinylStore.Core.Models;
 
 namespace VinylStore.Application.Services;
@@ -6,31 +8,31 @@ namespace VinylStore.Application.Services;
 public class VinylPlatesService : IVinylPlatesService
 {
     private readonly IVinylPlatesRepository _vinylPlatesRepository;
-    
+    private IVinylPlatesService _vinylPlatesServiceImplementation;
+
     public VinylPlatesService(IVinylPlatesRepository vinylPlatesRepository)
     {   
         _vinylPlatesRepository = vinylPlatesRepository;
     }
 
-    public async Task<IEnumerable<VinylPlate>> GetAll()
+    public Task<IEnumerable<VinylPlate>> GetAll()
     {
-        return await _vinylPlatesRepository.GetAll();
+        throw new NotImplementedException();
     }
 
-    public async Task<Guid> Create(VinylPlate vinylPlate)
+    public Task<Guid> Create(VinylPlate vinylPlate)
     {
-        return await _vinylPlatesRepository.Create(vinylPlate);
+        throw new NotImplementedException();
     }
 
-    public async Task<Guid> Update(Guid id, Guid albumId, string condition, string description,
-        string format, string coverUrl, string manufacturer, decimal price, int printYear, int count)
+    public Task<Guid> Update(Guid id, Guid albumId, string condition, string description, string format, string coverUrl,
+        string manufacturer, decimal price, int printYear, int count)
     {
-        return await _vinylPlatesRepository.Update(id, albumId, condition, description, format, coverUrl, manufacturer,
-            price, printYear, count);
+        throw new NotImplementedException();
     }
 
-    public async Task<Guid> Delete(Guid id)
+    public Task<Guid> Delete(Guid id)
     {
-        return await _vinylPlatesRepository.Delete(id);
+        throw new NotImplementedException();
     }
 }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using VinylStore.Application.Services;
 using VinylStore.Contracts;
 using VinylStore.Core.Abstractions;
+using VinylStore.Core.Abstractions.Services;
 using VinylStore.Core.Models;
 
 namespace VinylStore.Controllers;

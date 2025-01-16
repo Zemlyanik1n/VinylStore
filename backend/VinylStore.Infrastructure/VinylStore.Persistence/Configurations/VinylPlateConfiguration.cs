@@ -10,11 +10,6 @@ public class VinylPlateConfiguration : IEntityTypeConfiguration<VinylPlate>
     {
         builder.HasKey(x => x.Id);
         builder.Property(x => x.Id).IsRequired();
-        
-        builder
-            .HasOne(x => x.Album)
-            .WithMany(x => x.VinylPlates)
-            .HasForeignKey(x => x.AlbumId);
 
         // builder
         //     .HasMany(o => o.Orders)

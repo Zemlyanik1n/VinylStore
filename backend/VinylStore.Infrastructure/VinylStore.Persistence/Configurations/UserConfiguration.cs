@@ -10,13 +10,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     {
         builder.HasKey(u => u.Id);
         
-        // builder
-        //     .HasMany(u => u.Orders)
-        //     .WithOne(o => o.User)
-        //     .HasForeignKey(o => o.UserId);
+        builder
+            .HasMany(o => o.Orders)
+            .WithOne(o => o.User)
+            .HasForeignKey(o => o.UserId);
 
-        // builder
-        //     .HasMany(u => u.DeliveryAddresses)
-        //     .WithMany(d => d.Users);
+        builder
+            .HasMany(a => a.DeliveryAddresses)
+            .WithMany();
+
     }
 }

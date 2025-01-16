@@ -2,7 +2,7 @@ using VinylStore.Core.Models;
 
 namespace VinylStore.Core.Abstractions.Repositories;
 
-public interface ITrackRepository
+public interface ITracksRepository
 {
     Task<IEnumerable<Track>> GetAll(CancellationToken ct);
     Task<Track?> GetById(Guid id, CancellationToken ct);

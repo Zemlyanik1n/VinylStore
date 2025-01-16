@@ -1,6 +1,6 @@
 using VinylStore.Core.Models;
 
-namespace VinylStore.Core.Abstractions;
+namespace VinylStore.Core.Abstractions.Services;
 
 public interface IVinylPlatesService
 {

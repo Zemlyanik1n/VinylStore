@@ -13,7 +13,18 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
 
         builder
             .HasMany(g => g.Genres)
-            .WithMany(a => a.Albums);
+            .WithMany();
+        
+        builder
+            .HasMany(v => v.VinylPlates)
+            .WithOne(v => v.Album)
+            .HasForeignKey(v => v.AlbumId);
+        
+        builder
+            .HasMany(t => t.Tracks)
+            .WithOne(t => t.Album)
+            .HasForeignKey(t => t.AlbumId);
+        
         // builder
         //     .HasMany(v => v.VinylPlates)
         //     .WithOne(v => v.Album)

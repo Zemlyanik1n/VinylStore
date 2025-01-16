@@ -126,15 +126,15 @@ namespace VinylStore.Persistence.Migrations
                 name: "AlbumGenre",
                 columns: table => new
                 {
-                    AlbumsId = table.Column<Guid>(type: "uuid", nullable: false),
+                    AlbumId = table.Column<Guid>(type: "uuid", nullable: false),
                     GenresId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlbumGenre", x => new { x.AlbumsId, x.GenresId });
+                    table.PrimaryKey("PK_AlbumGenre", x => new { x.AlbumId, x.GenresId });
                     table.ForeignKey(
-                        name: "FK_AlbumGenre_Albums_AlbumsId",
-                        column: x => x.AlbumsId,
+                        name: "FK_AlbumGenre_Albums_AlbumId",
+                        column: x => x.AlbumId,
                         principalTable: "Albums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -151,11 +151,11 @@ namespace VinylStore.Persistence.Migrations
                 columns: table => new
                 {
                     DeliveryAddressesId = table.Column<Guid>(type: "uuid", nullable: false),
-                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeliveryAddressUser", x => new { x.DeliveryAddressesId, x.UsersId });
+                    table.PrimaryKey("PK_DeliveryAddressUser", x => new { x.DeliveryAddressesId, x.UserId });
                     table.ForeignKey(
                         name: "FK_DeliveryAddressUser_DeliveryAddresses_DeliveryAddressesId",
                         column: x => x.DeliveryAddressesId,
@@ -163,8 +163,8 @@ namespace VinylStore.Persistence.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeliveryAddressUser_Users_UsersId",
-                        column: x => x.UsersId,
+                        name: "FK_DeliveryAddressUser_Users_UserId",
+                        column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -201,15 +201,15 @@ namespace VinylStore.Persistence.Migrations
                 name: "OrderVinylPlate",
                 columns: table => new
                 {
-                    OrdersId = table.Column<Guid>(type: "uuid", nullable: false),
+                    OrderId = table.Column<Guid>(type: "uuid", nullable: false),
                     VinylPlatesId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderVinylPlate", x => new { x.OrdersId, x.VinylPlatesId });
+                    table.PrimaryKey("PK_OrderVinylPlate", x => new { x.OrderId, x.VinylPlatesId });
                     table.ForeignKey(
-                        name: "FK_OrderVinylPlate_Orders_OrdersId",
-                        column: x => x.OrdersId,
+                        name: "FK_OrderVinylPlate_Orders_OrderId",
+                        column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -227,9 +227,9 @@ namespace VinylStore.Persistence.Migrations
                 column: "GenresId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeliveryAddressUser_UsersId",
+                name: "IX_DeliveryAddressUser_UserId",
                 table: "DeliveryAddressUser",
-                column: "UsersId");
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Orders_DeliveryAddressId",

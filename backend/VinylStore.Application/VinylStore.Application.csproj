@@ -8,7 +8,6 @@
 
     <ItemGroup>
       <ProjectReference Include="..\VinylStore.Core\VinylStore.Core.csproj" />
-      <ProjectReference Include="..\VinylStore.Persistence\VinylStore.Persistence.csproj" />
     </ItemGroup>
 
 </Project>

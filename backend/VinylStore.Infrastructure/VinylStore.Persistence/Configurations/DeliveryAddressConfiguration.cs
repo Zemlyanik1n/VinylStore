@@ -9,13 +9,6 @@ public class DeliveryAddressConfiguration : IEntityTypeConfiguration<DeliveryAdd
     public void Configure(EntityTypeBuilder<DeliveryAddress> builder)
     {
         builder.HasKey(x => x.Id);
-
-        builder.HasMany(u => u.Users)
-            .WithMany(a => a.DeliveryAddresses);
         
-        // builder
-        //     .HasMany(d => d.Orders)
-        //     .WithOne(o => o.DeliveryAddress)
-        //     .HasForeignKey(o => o.DeliveryAddressId);
     }
 }

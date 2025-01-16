@@ -1,8 +1,14 @@
 
+using System.Drawing;
+
 namespace VinylStore.Core.Models;
 
 public class Album
 {
+    private Album()
+    {
+        
+    }
     public Guid Id { get; set; }
     public string AlbumName { get; set; } = string.Empty;
     public string ReleaseType { get; set; } = string.Empty;
@@ -10,7 +16,7 @@ public class Album
     public string Description { get; set; } = string.Empty;
     public int Duration { get; set; } = 0;
     public int ReleaseYear { get; set; } = 0;
-    public virtual ICollection<Genre>? Genres { get;} = [];
-    public virtual ICollection<VinylPlate>? VinylPlates { get;} = [];
-    public virtual ICollection<Track>? Tracks { get;} = [];
+    public virtual ICollection<Genre> Genres { get; } = [];
+    public virtual ICollection<Track> Tracks { get; } = [];
+    public virtual ICollection<VinylPlate> VinylPlates { get; } = []; 
 }

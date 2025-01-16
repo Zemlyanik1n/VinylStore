@@ -1,6 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using VinylStore.Application.Services;
 using VinylStore.Core.Abstractions;
+using VinylStore.Core.Abstractions.Repositories;
+using VinylStore.Core.Abstractions.Services;
 using VinylStore.Persistence;
 using VinylStore.Persistence.Repositories;
 
