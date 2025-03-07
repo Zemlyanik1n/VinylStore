@@ -15,7 +15,7 @@ public class GenresRepository(VinylStoreDbContext context) : IGenresRepository
             .ToListAsync(ct);
     }
 
-    public async Task<Genre?> GetById(Guid id, CancellationToken ct)
+    public async Task<Genre?> GetById(long id, CancellationToken ct)
     {
         return await _context.Genres
             .AsNoTracking()
@@ -28,12 +28,12 @@ public class GenresRepository(VinylStoreDbContext context) : IGenresRepository
         await _context.SaveChangesAsync(ct);
     }
 
-    public Task Update(Guid id, Genre genre, CancellationToken ct)
+    public Task Update(long id, Genre genre, CancellationToken ct)
     {
         throw new NotImplementedException();
     }
 
-    public async Task Delete(Guid id, CancellationToken ct)
+    public async Task Delete(long id, CancellationToken ct)
     {
         await _context.Genres
             .Where(g => g.Id == id)

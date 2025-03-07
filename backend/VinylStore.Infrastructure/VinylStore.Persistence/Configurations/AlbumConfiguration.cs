@@ -10,7 +10,9 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
     public void Configure(EntityTypeBuilder<Album> builder)
     {
         builder.HasKey(x => x.Id);
-
+            
+        builder.Property(x => x.Id).IsRequired();
+        
         builder
             .HasMany(g => g.Genres)
             .WithMany();
@@ -24,14 +26,5 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
             .HasMany(t => t.Tracks)
             .WithOne(t => t.Album)
             .HasForeignKey(t => t.AlbumId);
-        
-        // builder
-        //     .HasMany(v => v.VinylPlates)
-        //     .WithOne(v => v.Album)
-        //     .HasForeignKey(v => v.AlbumId);
-        // builder
-        //     .HasMany(v => v.Tracks)
-        //     .WithOne(a => a.Album)
-        //     .HasForeignKey(a => a.AlbumId);
     }
 }

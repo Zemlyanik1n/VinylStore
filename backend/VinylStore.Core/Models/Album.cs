@@ -7,16 +7,15 @@ public class Album
 {
     private Album()
     {
-        
     }
-    public Guid Id { get; set; }
-    public string AlbumName { get; set; } = string.Empty;
-    public string ReleaseType { get; set; } = string.Empty;
-    public string ArtistName { get; set; } = string.Empty;
-    public string Description { get; set; } = string.Empty;
+    public long Id { get; set; }
+    public string AlbumName { get; set; }
+    public string ReleaseType { get; set; }
+    public string ArtistName { get; set; } 
+    public string Description { get; set; }
     public int Duration { get; set; } = 0;
     public int ReleaseYear { get; set; } = 0;
-    public virtual ICollection<Genre> Genres { get; } = [];
-    public virtual ICollection<Track> Tracks { get; } = [];
-    public virtual ICollection<VinylPlate> VinylPlates { get; } = []; 
+    public ICollection<Genre> Genres { get; set; } = [];
+    public ICollection<Track> Tracks { get; set; } = [];
+    public ICollection<VinylPlate> VinylPlates { get; set; } = []; 
 }

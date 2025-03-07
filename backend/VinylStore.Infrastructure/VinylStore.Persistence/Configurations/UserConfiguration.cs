@@ -19,5 +19,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasMany(a => a.DeliveryAddresses)
             .WithMany();
 
+        builder
+            .HasOne(u => u.Cart)
+            .WithOne(c => c.User)
+            .HasForeignKey<Cart>(c => c.UserId);
     }
 }

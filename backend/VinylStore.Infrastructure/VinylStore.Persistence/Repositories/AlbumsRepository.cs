@@ -15,7 +15,7 @@ public class AlbumsRepository(VinylStoreDbContext context) : IAlbumsRepository
             .ToListAsync(ct);
     }
 
-    public async Task<Album?> GetById(Guid id, CancellationToken ct)
+    public async Task<Album?> GetById(long id, CancellationToken ct)
     {
         var album = await _context.Albums
             .AsNoTracking()
@@ -29,12 +29,12 @@ public class AlbumsRepository(VinylStoreDbContext context) : IAlbumsRepository
         await _context.SaveChangesAsync(ct);
     }
 
-    public async Task Update(Guid id, Album album, CancellationToken ct)
+    public async Task Update(long id, Album album, CancellationToken ct)
     {
         throw new Exception();
     }
 
-    public async Task Delete(Guid id, CancellationToken ct)
+    public async Task Delete(long id, CancellationToken ct)
     {
         await _context.Albums
             .Where(t => t.Id == id)

@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Runtime.InteropServices.ComTypes;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using VinylStore.Core.Models;
 using VinylStore.Persistence.Configurations;
@@ -19,6 +20,8 @@ public class VinylStoreDbContext : DbContext
     public DbSet<Track> Tracks { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<VinylPlate> VinylPlates { get; set; }
+    public DbSet<CartItem> CartItems { get; set; }
+    public DbSet<Cart> Carts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -36,6 +39,7 @@ public class VinylStoreDbContext : DbContext
         modelBuilder.ApplyConfiguration(new TrackConfiguration());
         modelBuilder.ApplyConfiguration(new UserConfiguration());
         modelBuilder.ApplyConfiguration(new DeliveryAddressConfiguration());
+        modelBuilder.ApplyConfiguration(new CartItemConfiguration());
         
         base.OnModelCreating(modelBuilder);
     }

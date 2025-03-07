@@ -6,11 +6,11 @@ public class Track
     {
     }
 
-    public Guid Id { get; set; }
-    public int Duration { get; set; } = 0;
+    public long Id { get; set; }
+    public int DurationInSeconds { get; set; } = 0;
     public string Name { get; set; } = string.Empty;
     public int Position { get; set; } = 0; 
-    public virtual Guid AlbumId { get; set; }
-    public virtual Album? Album { get; set; }
+    public  long AlbumId { get; set; }
+    public  Album Album { get; set; }
   
 }
