@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.Services;
@@ -19,6 +20,20 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
         catch (Exception ex)
         {
             return StatusCode(500, ex.Message);
+        }
+    }
+
+    [HttpGet("genres")]
+    public async Task<IActionResult> GetUniqueGenres()
+    {
+        try
+        {
+            var result = await vinylsService.GetUniqueGenres();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
         }
     }
 }

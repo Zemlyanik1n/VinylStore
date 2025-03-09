@@ -9,5 +9,8 @@ public class VinylCatalogResponse
     public int ReleaseYear { get; set; }
     public string ReleaseType { get; set; } = null!;
     public decimal Price { get; set; }
+    
+    public string Condition { get; set; } = null!;
+    public int PrintYear { get; set; }
     public List<string>? Genres { get; set; }
 }

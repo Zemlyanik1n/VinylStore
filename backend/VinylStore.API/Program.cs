@@ -16,6 +16,7 @@ builder.Services.AddDbContext<VinylStoreDbContext>();
 
 builder.Services.AddScoped<IVinylsService, VinylsService>();
 builder.Services.AddScoped<IVinylPlatesRepository, VinylPlatesRepository>();
+builder.Services.AddScoped<IGenresRepository, GenresRepository>();
 
 var app = builder.Build();
 

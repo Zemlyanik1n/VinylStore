@@ -30,11 +30,14 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .ThenInclude(a => a.Genres)
             .AsSplitQuery();
             //.AsQueryable();
-        
-        if (!string.IsNullOrEmpty(filter.Search))
-            query = query.Where(v => v.Album.AlbumName.Contains(filter.Search));
 
-        if (filter.MinPrice != null)
+            if (!string.IsNullOrEmpty(filter.Search))
+            {
+                query = query.Where(v => (v.Album.AlbumName.ToLower().Contains(filter.Search.ToLower())
+                    || v.Album.ArtistName.ToLower().Contains(filter.Search.ToLower())));
+            }
+
+            if (filter.MinPrice != null)
             query = query.Where(v => v.Price >= filter.MinPrice);
         
         if(filter.MaxPrice != null)
@@ -56,8 +59,8 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
         {
             "price_asc" => query.OrderBy(v => v.Price),
             "price_desc" => query.OrderByDescending(v => v.Price),
-            "year_asc" => query.OrderBy(v => v.PrintYear),
-            _ => query.OrderByDescending(v => v.PrintYear)
+            "year_asc" => query.OrderBy(v => v.Album.ReleaseYear),
+            _ => query.OrderByDescending(v => v.Album.ReleaseYear)
         };
 
         return query;
@@ -91,6 +94,7 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .Where(v => v.Id == id)
             .ExecuteDeleteAsync(ct);
     }
+    
 
     // условный умный поиск - не совсем разумно использовать запрос к бд каждый раз
     // public async Task<IEnumerable<VinylPlate>> GetBySmartSearch(string albumName)

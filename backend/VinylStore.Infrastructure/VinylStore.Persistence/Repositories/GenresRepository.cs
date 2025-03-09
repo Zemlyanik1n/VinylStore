@@ -7,7 +7,15 @@ namespace VinylStore.Persistence.Repositories;
 public class GenresRepository(VinylStoreDbContext context) : IGenresRepository
 {
     private readonly VinylStoreDbContext _context = context;
-    
+
+    public async Task<IEnumerable<Genre>> GetUnique()
+    {
+        return await _context.Genres
+            .AsNoTracking()
+            .Distinct()
+            .ToListAsync();
+    }
+
     public async Task<IEnumerable<Genre>> GetAll(CancellationToken ct)
     {
         return await _context.Genres
