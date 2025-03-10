@@ -7,4 +7,6 @@ public interface IVinylsService
 {
     Task<PaginatedResponse<VinylCatalogResponse>> GetFilteredPagedVinyls(VinylFilterRequest filterRequest);
     Task<IEnumerable<GenreResponse>> GetUniqueGenres();
+
+    Task<VinylPlateResponse?> GetVinylPlateById(long id);
 }

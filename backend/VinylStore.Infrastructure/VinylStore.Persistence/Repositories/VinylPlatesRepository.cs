@@ -65,13 +65,14 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
 
         return query;
     }
+
     private static IQueryable<VinylPlate> ApplyPaging(IQueryable<VinylPlate> query, IVinylFilter filter)
     {
         return query
                 .Skip((filter.Page - 1) * filter.PageSize)
                 .Take(filter.PageSize);
     }
-    public async Task<VinylPlate?> GetById(long id, CancellationToken ct)
+    public async Task<VinylPlate?> GetById(long id)
     { // may be errors, catch
         return await _context.VinylPlates
             .AsNoTracking()
@@ -79,7 +80,7 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .ThenInclude(a => a.Genres)
             .Include(v => v.Album)
             .ThenInclude(a => a.Tracks)
-            .SingleOrDefaultAsync(p => p.Id == id, ct);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task Create(VinylPlate vinylPlate, CancellationToken ct)

@@ -9,7 +9,7 @@ namespace VinylStore.Controllers;
 [Route("api/[controller]")]
 public class VinylsController(IVinylsService vinylsService) : ControllerBase
 {
-    [HttpGet]
+    [HttpGet("catalog")]
     public async Task<IActionResult> GetVinylsWithFilters([FromQuery] VinylFilterRequest filter)
     {
         try
@@ -29,6 +29,20 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
         try
         {
             var result = await vinylsService.GetUniqueGenres();
+            return Ok(result);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
+
+    [HttpGet("{id:long}")]
+    public async Task<IActionResult> GetVinylPlateById(long id)
+    {
+        try
+        {
+            var result = await vinylsService.GetVinylPlateById(id);
             return Ok(result);
         }
         catch (Exception e)

@@ -110,7 +110,7 @@
         sortBy: document.getElementById('sortBy').value || 'price_desc'
       });
 
-      const response = await fetch(`/api/vinyls?${params}`);
+      const response = await fetch(`/api/vinyls/catalog?${params}`);
       if (!response.ok) throw new Error('Ошибка загрузки');
 
       const data = await response.json();
@@ -137,8 +137,7 @@
     const minPrice = document.getElementById('minPrice').value;
     const maxPrice = document.getElementById('maxPrice').value;
     const year = document.getElementById('year').value;
-
-    // Проверка цены
+    
     if (minPrice && !validateNumberInput(minPrice, 0, Infinity)) {
       alert('Минимальная цена должна быть числом больше или равным 0');
       return false;
@@ -153,8 +152,7 @@
       alert('Минимальная цена не может быть больше максимальной');
       return false;
     }
-
-    // Проверка года (если поле не пустое)
+    
     if (year && !validateNumberInput(year, 1700, new Date().getFullYear())) {
       alert(`Год должен быть числом от 1700 до ${new Date().getFullYear()}`);
       return false;
@@ -172,7 +170,7 @@
   function enforceMinMax(inputElement, min, max) {
     inputElement.addEventListener('change', (e) => {
       let value = e.target.value.trim();
-      if (value === '') return; // Если поле пустое, ничего не делаем
+      if (value === '') return;
 
       value = parseFloat(value);
       if (isNaN(value)) value = min;
@@ -212,7 +210,7 @@
         <p>Год печати: ${item.printYear}</p>
         <p>Жанры: ${item.genres?.join(', ') || 'Не указано'}</p>
         <p class="price">${item.price.toFixed(2)} ₽</p>
-        <a href="/vinyl/${item.vinylPlateId}" class="details-btn">Подробнее</a>
+        <a href="/vinyl.html?id=${item.vinylPlateId}" class="details-btn">Подробнее</a>
       </div>
     </div>
   `).join(''));
@@ -237,7 +235,6 @@
     }
   }
   
-  // Инициализация
   document.addEventListener('DOMContentLoaded', () => {
     loadData(true);
     loadGenres();
