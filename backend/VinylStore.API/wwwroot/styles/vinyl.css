@@ -4,9 +4,10 @@ body {
   padding: 0;
   color: #333;
   background-color: #f9f9f9;
-  min-height: 100vh;
+  height: 100vh;
   display: flex;
   flex-direction: column;
+  min-height: 100vh;
 }
 
 header {
@@ -48,7 +49,7 @@ nav ul li a.active {
 
 main {
   padding: 2rem;
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
 }
 
@@ -65,28 +66,22 @@ h2 {
   align-items: flex-start;
 }
 
-.vinyl-image-wrapper {
-  max-width: 400px;
-  width: 100%;
-  flex-shrink: 0;
+.cover-container {
+  width: 10vh;
+  height: 10vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: #ffffff;
-  padding: 1rem;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
 .vinyl-image {
-  width: 100%;
   border-radius: 8px;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-
 .vinyl-image img {
-  max-width: 100%;
-  border-radius: 8px;
+  object-fit: cover;
 }
 
 .vinyl-details {
@@ -150,7 +145,7 @@ h2 {
 }
 
 .add-to-cart-button {
-  margin-top: auto;
+  margin-top: 10px;
   padding: 0.75rem 1.5rem;
   background-color: #ff9800;
   color: #fff;
@@ -162,10 +157,11 @@ h2 {
   align-self: center;
 }
 
-footer {
+.footer {
   text-align: center;
   padding: 1rem 0;
   background-color: #222;
   color: #fff;
-  margin-top: 2rem;
+  box-sizing: border-box;
+  margin-top: auto;
 }

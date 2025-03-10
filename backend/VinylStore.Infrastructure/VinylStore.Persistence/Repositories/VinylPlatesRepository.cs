@@ -30,11 +30,14 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .ThenInclude(a => a.Genres)
             .AsSplitQuery();
             //.AsQueryable();
-        
-        if (!string.IsNullOrEmpty(filter.Search))
-            query = query.Where(v => v.Album.AlbumName.Contains(filter.Search));
 
-        if (filter.MinPrice != null)
+            if (!string.IsNullOrEmpty(filter.Search))
+            {
+                query = query.Where(v => (v.Album.AlbumName.ToLower().Contains(filter.Search.ToLower())
+                    || v.Album.ArtistName.ToLower().Contains(filter.Search.ToLower())));
+            }
+
+            if (filter.MinPrice != null)
             query = query.Where(v => v.Price >= filter.MinPrice);
         
         if(filter.MaxPrice != null)
@@ -56,19 +59,20 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
         {
             "price_asc" => query.OrderBy(v => v.Price),
             "price_desc" => query.OrderByDescending(v => v.Price),
-            "year_asc" => query.OrderBy(v => v.PrintYear),
-            _ => query.OrderByDescending(v => v.PrintYear)
+            "year_asc" => query.OrderBy(v => v.Album.ReleaseYear),
+            _ => query.OrderByDescending(v => v.Album.ReleaseYear)
         };
 
         return query;
     }
+
     private static IQueryable<VinylPlate> ApplyPaging(IQueryable<VinylPlate> query, IVinylFilter filter)
     {
         return query
                 .Skip((filter.Page - 1) * filter.PageSize)
                 .Take(filter.PageSize);
     }
-    public async Task<VinylPlate?> GetById(long id, CancellationToken ct)
+    public async Task<VinylPlate?> GetById(long id)
     { // may be errors, catch
         return await _context.VinylPlates
             .AsNoTracking()
@@ -76,7 +80,7 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .ThenInclude(a => a.Genres)
             .Include(v => v.Album)
             .ThenInclude(a => a.Tracks)
-            .SingleOrDefaultAsync(p => p.Id == id, ct);
+            .SingleOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task Create(VinylPlate vinylPlate, CancellationToken ct)
@@ -92,15 +96,30 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .ExecuteDeleteAsync(ct);
     }
 
-    // условный умный поиск - не совсем разумно использовать запрос к бд каждый раз
-    // public async Task<IEnumerable<VinylPlate>> GetBySmartSearch(string albumName)
-    // {
-    //     var result = _context.VinylPlates
-    //         .AsNoTracking()
-    //         .Include(v => v.Album)
-    //         .Where(v => v.Album.AlbumName.ToLower().Contains(albumName.ToLower()));
-    //
-    //     return await result.ToListAsync();
-    // }
+    public async Task<IEnumerable<VinylPlate>> GetSuggestions(string searchQuery, int count)
+    {
+        searchQuery = searchQuery.ToLower();
+        var vinylsAlbums = await _context.VinylPlates
+            .AsNoTracking()
+            .Include(v => v.Album)
+            .Where(v => v.Album.AlbumName.ToLower().Contains(searchQuery))
+            .Take(count)
+            .ToListAsync();
+        var remaining = count - vinylsAlbums.Count;
+
+        if (remaining > 0)
+        {
+            var ids = vinylsAlbums.Select(v => v.Id).ToList();
+            var vinylsArtists = await _context.VinylPlates
+                .AsNoTracking()
+                .Include(v => v.Album)
+                .Where(v => v.Album.ArtistName.ToLower().Contains(searchQuery)
+                            && !ids.Contains(v.Id) )
+                .Take(remaining)
+                .ToListAsync();
+            vinylsAlbums.AddRange(vinylsArtists);
+        }
+        return vinylsAlbums;
+    }
 
 }

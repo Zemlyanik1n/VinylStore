@@ -1,188 +1,301 @@
-  <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>Каталог - Виниловые пластинки</title>
-      <link rel="stylesheet" href="../styles/catalog.css" />
-    </head>
-    <body>
-    <header>
-      <div class="logo">Виниловый Магазин</div>
-      <nav>
-        <ul>
-          <li><a href="index.html">Главная</a></li>
-          <li><a href="catalog.html" class="active">Каталог</a></li>
-          <li><a href="cart.html">Корзина</a></li>
-          <li><a href="care.html">Уход за винилом</a></li>
-          <li><a href="add_vinyl.html">Добавить пластинку</a></li>
-          <li><a href="about.html">О нас</a></li>
-        </ul>
-      </nav>
-    </header>
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Каталог виниловых пластинок</title>
+  <link rel="stylesheet" href="styles/catalog.css">
+</head>
+<body>
+<header>
+  <div class="logo">Виниловый Магазин</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="catalog.html" class="active">Каталог</a></li>
+      <li><a href="cart.html">Корзина</a></li>
+      <li><a href="care.html">Уход за винилом</a></li>
+      <li><a href="add_vinyl.html">Добавить пластинку</a></li>
+      <li><a href="about.html">О нас</a></li>
+    </ul>
+  </nav>
+</header>
 
-    <main class="main-content">
-      <div class="catalog-div">
-        <h1>Каталог виниловых пластинок</h1>
-        <div class="catalog"></div>
-        <div class="pagination">
-          <button id="prev-page">Назад</button>
-          <span id="current-page">1</span>
-          <button id="next-page">Вперед</button>
+<main>
+  <div class="catalog-container">
+    <div class="main-content">
+      <div class="vinyl-grid" id="vinyl-grid"></div>
+      <div class="load-more-container">
+        <button class="load-more-btn" id="loadMore" onclick="loadMore()">Загрузить еще</button>
+      </div>
+    </div>
+
+    <aside class="filters-sidebar">
+      <h2>Фильтры</h2>
+      <div class="filter-group">
+        <div class="search-container">
+          <input type="text" id="header-search" placeholder="Поиск альбомов и исполнителей...">
+          <div id="search-suggestions" class="search-suggestions"></div>
         </div>
       </div>
-
-      <aside class="sidebar">
-        <div class="filters">
-          <h2>Фильтры</h2>
-          <label>
-            Жанр:
-            <select id="genre-filter">
-              <option value="all">Все жанры</option>
-              <option value="постпанк">Постпанк</option>
-              <option value="альтернатива">Альтернатива</option>
-              <option value="готик-рок">Готик-рок</option>
-            </select>
-          </label>
-          <label>
-            Год релиза:
-            <input type="number" id="year-filter" min="1900" placeholder="Год релиза">
-          </label>
-          <label>
-            Тип релиза:
-            <select id="type-filter">
-              <option value="all">Все</option>
-              <option value="LP">LP</option>
-              <option value="EP">EP</option>
-              <option value="Single">Сингл</option>
-            </select>
-          </label>
-          <label>
-            Поиск:
-            <input type="text" id="search-input" placeholder="Название альбома">
-          </label>
-          <label>
-            Цена от:
-            <input type="number" id="price-from" min="0" placeholder="0">
-          </label>
-          <label>
-            Цена до:
-            <input type="number" id="price-to" min="0" placeholder="10000">
-          </label>
-          <button id="apply-filters">Применить фильтры</button>
-        </div>
-      </aside>
-    </main>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", () => {
-        const API_URL = '/api/Vinyls'; // Замените на ваш API endpoint
-        let currentPage = 1;
-        let totalPages = 1;
-
-        const elements = {
-          catalog: document.querySelector(".catalog"),
-          currentPage: document.getElementById("current-page"),
-          prevPage: document.getElementById("prev-page"),
-          nextPage: document.getElementById("next-page"),
-          filters: {
-            genre: document.getElementById("genre-filter"),
-            year: document.getElementById("year-filter"),
-            type: document.getElementById("type-filter"),
-            search: document.getElementById("search-input"),
-            priceFrom: document.getElementById("price-from"),
-            priceTo: document.getElementById("price-to")
-          }
-        };
-
-        async function loadVinyls() {
-          try {
-            elements.catalog.classList.add("loading");
-
-            const params = new URLSearchParams({
-              page: currentPage,
-              pageSize: 4,
-              genre: elements.filters.genre.value,
-              releaseYear: elements.filters.year.value,
-              releaseType: elements.filters.type.value,
-              search: elements.filters.search.value,
-              minPrice: elements.filters.priceFrom.value,
-              maxPrice: elements.filters.priceTo.value,
-              sortBy: "year_desc"
-            });
-
-            const response = await fetch(`${API_URL}?${params}`);
-            if (!response.ok) throw new Error('Ошибка загрузки данных');
-
-            const { items, totalCount, pageSize } = await response.json();
-            totalPages = Math.ceil(totalCount / pageSize);
-
-            renderVinyls(items);
-            updatePagination();
-          } catch (error) {
-            console.error('Ошибка:', error);
-            elements.catalog.innerHTML = '<p>Ошибка загрузки данных</p>';
-          } finally {
-            elements.catalog.classList.remove("loading");
-          }
-        }
-
-        function renderVinyls(vinyls) {
-          elements.catalog.innerHTML = vinyls.map(vinyl => `
-      <div class="record-card">
-        <div class="image-container">
-          <img src="${vinyl.coverUrl}" alt="${vinyl.albumName}">
-        </div>
-        <h2 class="title">${vinyl.albumName}</h2>
-        <p class="artist">${vinyl.artistName}</p>
-        <p class="genres">${vinyl.genres.join(', ')}</p>
-        <p class="year">${vinyl.releaseYear}</p>
-        <p class="type">${vinyl.releaseType}</p>
-        <p class="price">${vinyl.price.toFixed(2)} руб.</p>
-        <a href="/vinyls/${vinyl.vinylPlateId}" class="details-link">Подробнее</a>
+      <div class="filter-group">
+        <select id="genre">
+          <option value="">Все жанры</option>
+        </select>
       </div>
-    `).join('');
-        }
+      <div class="filter-group">
+        <input type="number" id="minPrice" placeholder="Цена от" min="0" step="1">
+        <input type="number" id="maxPrice" placeholder="Цена до" min="0" step="1">
+      </div>
+      <div class="filter-group">
+        <input type="number" id="year" placeholder="Год релиза" min="1600" max="2025" step="1">
+      </div>
+      <div class="filter-group">
+        <select id="releaseType">
+          <option value="">Все типы</option>
+          <option value="LP">LP</option>
+          <option value="EP">EP</option>
+          <option value="Single">Сингл</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <select id="sortBy">
+          <option value="year_desc">Новые сначала</option>
+          <option value="year_asc">Старые сначала</option>
+          <option value="price_asc">Дешевые сначала</option>
+          <option value="price_desc">Дорогие сначала</option>
+        </select>
+      </div>
+      <button class="apply-btn" onclick="loadData(true)">Применить</button>
+    </aside>
+  </div>
+</main>
 
-        function updatePagination() {
-          elements.currentPage.textContent = currentPage;
-          elements.prevPage.disabled = currentPage === 1;
-          elements.nextPage.disabled = currentPage === totalPages;
-        }
+<footer>
+  <p>&copy; 2025 Виниловый Магазин. Все права защищены.</p>
+</footer>
 
-        // Обработчики событий
-        document.getElementById("apply-filters").addEventListener("click", () => {
-          currentPage = 1;
-          loadVinyls();
-        });
+<script>
+  let currentPage = 1;
+  let isLoading = false;
+  let hasMore = true;
 
-        elements.prevPage.addEventListener("click", () => {
-          if (currentPage > 1) {
-            currentPage--;
-            loadVinyls();
-          }
-        });
+  async function loadData(reset = false) {
+    if (!navigator.onLine) {
+      alert('Нет интернет-соединения. Проверьте подключение к сети.');
+      return;
+    }
+    if (isLoading) {
+      console.log('Запрос уже выполняется');
+      return;
+    }
+    if (!validateFilters()) return;
+    try {
+      isLoading = true;
+      document.getElementById('loadMore').disabled = true;
 
-        elements.nextPage.addEventListener("click", () => {
-          if (currentPage < totalPages) {
-            currentPage++;
-            loadVinyls();
-          }
-        });
+      if (reset) {
+        currentPage = 1;
+        hasMore = true;
+        document.getElementById('vinyl-grid').innerHTML = '';
+      }
 
-        // Дебаунс для поиска
-        let searchTimeout;
-        elements.filters.search.addEventListener("input", () => {
-          clearTimeout(searchTimeout);
-          searchTimeout = setTimeout(() => {
-            currentPage = 1;
-            loadVinyls();
-          }, 500);
-        });
-
-        // Первоначальная загрузка
-        loadVinyls();
+      const pageSize = 8;
+      const params = new URLSearchParams({
+        page: currentPage,
+        pageSize,
+        search: document.getElementById('header-search').value.toLowerCase().trim(),
+        genre: document.getElementById('genre').value,
+        minPrice: document.getElementById('minPrice').value,
+        maxPrice: document.getElementById('maxPrice').value,
+        releaseYear: document.getElementById('year').value,
+        releaseType: document.getElementById('releaseType').value,
+        sortBy: document.getElementById('sortBy').value || 'price_desc'
       });
-    </script>
-    </body>
-    </html>
+
+      const response = await fetch(`/api/vinyls/catalog?${params}`);
+      if (!response.ok) throw new Error('Ошибка загрузки');
+
+      const data = await response.json();
+      hasMore = data.page < data.totalPages;
+
+      renderVinyls(data.items, reset);
+      currentPage++;
+
+    } catch (error) {
+      console.error('Ошибка:', error);
+      alert('Не удалось загрузить данные');
+    } finally {
+      isLoading = false;
+      document.getElementById('loadMore').disabled = !hasMore;
+    }
+  }
+
+  function validateNumberInput(value, min, max) {
+    const num = parseFloat(value);
+    return !isNaN(num) && num >= min && num <= max;
+  }
+
+  function validateFilters() {
+    const minPrice = document.getElementById('minPrice').value;
+    const maxPrice = document.getElementById('maxPrice').value;
+    const year = document.getElementById('year').value;
+    
+    if (minPrice && !validateNumberInput(minPrice, 0, Infinity)) {
+      alert('Минимальная цена должна быть числом больше или равным 0');
+      return false;
+    }
+
+    if (maxPrice && !validateNumberInput(maxPrice, 0, Infinity)) {
+      alert('Максимальная цена должна быть числом больше или равным 0');
+      return false;
+    }
+
+    if (minPrice && maxPrice && parseFloat(minPrice) > parseFloat(maxPrice)) {
+      alert('Минимальная цена не может быть больше максимальной');
+      return false;
+    }
+    
+    if (year && !validateNumberInput(year, 1700, new Date().getFullYear())) {
+      alert(`Год должен быть числом от 1700 до ${new Date().getFullYear()}`);
+      return false;
+    }
+
+    return true;
+  }
+
+  function restrictToNumbers(inputElement) {
+    inputElement.addEventListener('input', (e) => {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+    });
+  }
+
+  function enforceMinMax(inputElement, min, max) {
+    inputElement.addEventListener('change', (e) => {
+      let value = e.target.value.trim();
+      if (value === '') return;
+
+      value = parseFloat(value);
+      if (isNaN(value)) value = min;
+      if (value < min) value = min;
+      if (value > max) value = max;
+      e.target.value = value;
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    restrictToNumbers(document.getElementById('minPrice'));
+    restrictToNumbers(document.getElementById('maxPrice'));
+    restrictToNumbers(document.getElementById('year'));
+
+    enforceMinMax(document.getElementById('minPrice'), 0, Infinity);
+    enforceMinMax(document.getElementById('maxPrice'), 0, Infinity);
+    enforceMinMax(document.getElementById('year'), 1700, new Date().getFullYear());
+  });
+  
+  // умный поиск
+  let searchTimeout;
+
+  document.getElementById('header-search').addEventListener('input', function(e) {
+    const query = e.target.value.trim();
+    const suggestionsContainer = document.getElementById('search-suggestions');
+
+    clearTimeout(searchTimeout);
+
+    if(query.length < 3) {
+      suggestionsContainer.classList.remove('visible');
+      return;
+    }
+
+    suggestionsContainer.classList.add('visible');
+
+    searchTimeout = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/vinyls/suggestions?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        console.log(data)
+
+        suggestionsContainer.innerHTML = data.map(item => `
+          <div class="suggestion-item" data-id="${item.vinylPlateId}">
+            <img src="${item.coverImageUrl}" alt="${item.albumName}" 
+                 onerror="this.src='default-image.jpg'">
+            <div>
+              <div>${item.albumName}</div>
+              <small>${item.artistName}</small>
+            </div>
+          </div>
+        `).join('');
+
+        // Обработчик клика по подсказкам
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+          item.addEventListener('click', () => {
+            window.location.href = `/vinyl.html?id=${item.dataset.id}`;
+          });
+        });
+
+      } catch (error) {
+        console.error('Ошибка поиска:', error);
+        suggestionsContainer.innerHTML = '<div class="suggestion-item">Ошибка загрузки</div>';
+      }
+    }, 300);
+  });
+
+  // Скрываем подсказки при клике вне области
+  document.addEventListener('click', (e) => {
+    if(!e.target.closest('.search-container')) {
+      document.getElementById('search-suggestions').classList.remove('visible');
+    }
+  });
+  
+  function renderVinyls(items, reset) {
+    const grid = document.getElementById('vinyl-grid');
+    if (reset) grid.innerHTML = '';
+
+    if (items.length === 0) {
+      grid.innerHTML = '<p class="no-results">Ничего не найдено. Попробуйте изменить фильтры.</p>';
+      return;
+    }
+
+    grid.insertAdjacentHTML('beforeend', items.map(item => `
+    <div class="vinyl-card">
+      <img src="${item.coverUrl}" alt="${item.albumName}" onerror="this.src='default-image.jpg'">
+      <div class="vinyl-info">
+        <h3>${item.albumName}</h3>
+        <p>${item.artistName}</p>
+        <p>${item.releaseYear} • ${item.releaseType}</p>
+        <p>Состояние: ${item.condition}</p>
+        <p>Год печати: ${item.printYear}</p>
+        <p>Жанры: ${item.genres?.join(', ') || 'Не указано'}</p>
+        <p class="price">${item.price.toFixed(2)} ₽</p>
+        <a href="/vinyl.html?id=${item.vinylPlateId}" class="details-btn">Подробнее</a>
+      </div>
+    </div>
+  `).join(''));
+  }
+
+  function loadMore() {
+    if (hasMore && !isLoading) {
+      loadData();
+    }
+  }
+  
+
+  async function loadGenres() {
+    try {
+      const response = await fetch('/api/vinyls/genres');
+      const genres = await response.json();
+      const select = document.getElementById('genre');
+      select.innerHTML = '<option value="">Все жанры</option>' +
+              genres.map(g => `<option value="${g.name}">${g.name}</option>`).join('');
+    } catch (error) {
+      console.error('Ошибка загрузки жанров:', error);
+    }
+  }
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    loadData(true);
+    loadGenres();
+  });
+</script>
+</body>
+</html>

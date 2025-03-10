@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Виниловый Магазин</title>
+  <link rel="stylesheet" href="../styles/vinyl.css" />
+  <style>
+    /* Дополнительные стили для контейнера обложки */
+    .cover-container {
+      width: 20vw;
+      height: 20vw;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .vinyl-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .vinyl-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  </style>
+</head>
+<body>
+<header>
+  <div class="logo">Виниловый Магазин</div>
+  <nav>
+    <ul>
+      <li><a href="index.html">Главная</a></li>
+      <li><a href="catalog.html">Каталог</a></li>
+      <li><a href="cart.html">Корзина</a></li>
+      <li><a href="care.html">Уход за винилом</a></li>
+      <li><a href="add_vinyl.html">Добавить пластинку</a></li>
+      <li><a href="about.html">О нас</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main>
+  <h1 id="album-title">Загрузка...</h1>
+  <div class="vinyl-container" id="vinyl-content"></div>
+</main>
+
+<footer class="footer">
+  <p>&copy; 2025 Виниловый Магазин. Все права защищены.</p>
+</footer>
+
+<script>
+  async function fetchVinylData() {
+    const params = new URLSearchParams(window.location.search);
+    const id = params.get("id");
+    if (!id) {
+      document.getElementById("album-title").textContent = "Ошибка: ID не найден";
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/vinyls/${id}`);
+      if (!response.ok) throw new Error("Ошибка загрузки данных");
+      const vinyl = await response.json();
+      renderVinyl(vinyl);
+    } catch (error) {
+      document.getElementById("album-title").textContent = "Ошибка загрузки";
+    }
+  }
+
+  function renderVinyl(vinyl) {
+    document.getElementById("album-title").textContent = vinyl.album.albumName;
+    const vinylContent = document.getElementById("vinyl-content");
+
+    vinylContent.innerHTML = `
+          <div class="top-section">
+            <div class="cover-container">
+              <div class="vinyl-image">
+                <img src="${vinyl.coverImageUrl}" alt="Обложка альбома" />
+              </div>
+            </div>
+            <div class="tracklist-card">
+              <h2>Треклист</h2>
+              <ul>
+                ${vinyl.album.tracks.map(track => `<li><strong>${track.position}. ${track.name}</strong> - ${track.formattedDurationInSeconds}</li>`).join('')}
+              </ul>
+            </div>
+          </div>
+          <div class="vinyl-details">
+            <p><strong>Исполнитель:</strong> ${vinyl.album.artistName}</p>
+            <p><strong>Год выпуска:</strong> ${vinyl.album.releaseYear}</p>
+            <p><strong>Год печати:</strong> ${vinyl.printYear}</p>
+            <p><strong>Жанры:</strong> ${vinyl.album.genres.join(", ")}</p>
+            <p><strong>Тип пластинки:</strong> ${vinyl.album.releaseType}</p>
+            <p><strong>Цена:</strong> ${vinyl.price} руб.</p>
+            <p><strong>Продолжительность:</strong> ${Math.floor(vinyl.album.duration / 60)}:${(vinyl.album.duration % 60).toString().padStart(2, '0')}</p>
+                        <p><strong>Состояние:</strong> ${vinyl.condition}</p>
+            <p><strong>Производитель:</strong> ${vinyl.manufacturer}</p>
+            <p><strong>Описание:</strong> ${vinyl.description}<br><br>${vinyl.album.description}</p>
+            <button class="add-to-cart-button">Добавить в корзину</button>
+          </div>
+        `;
+  }
+
+  fetchVinylData();
+</script>
+</body>
+</html>
