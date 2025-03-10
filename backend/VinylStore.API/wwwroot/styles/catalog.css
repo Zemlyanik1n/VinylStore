@@ -85,7 +85,32 @@ nav ul li a.active {
   margin-top: 0.5rem;
 }
 
+/* В файле catalog.css добавьте */
+.filter-group .search-container {
+  width: 100%;
+}
 
+#header-search {
+  width: 100%;
+  box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+  margin-left: 0; /* Убираем отступ */
+}
+
+.search-suggestions {
+  width: 100% !important; /* Ширина как у поля ввода */
+  left: 0 !important;
+  right: 0 !important;
+}
+
+/* Для всех элементов фильтров добавьте общие стили */
+.filter-group select,
+.filter-group input[type="number"],
+.filter-group input[type="text"] {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem;
+  margin: 0.3rem 0;
+}
 
 /* Vinyl grid */
 .vinyl-grid {
@@ -227,6 +252,60 @@ nav ul li a.active {
   color: #666;
   padding: 2rem;
 }
+
+/* умный поиск */
+.search-container {
+  position: relative;
+  margin-left: auto;
+  width: 50px;
+}
+
+#header-search {
+  width: 100%;
+  padding: 0.8rem;
+}
+
+.search-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 0 0 4px 4px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  max-height: 300px;
+  overflow-y: auto;
+  z-index: 1000;
+  display: none;
+}
+
+.search-suggestions.visible {
+  display: block;
+}
+
+.suggestion-item {
+  padding: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  transition: background 0.2s;
+}
+
+.suggestion-item:hover {
+  background: #f5f5f5;
+}
+
+.suggestion-item img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 4px;
+}
+
+
+
 
 @media (max-width: 1200px) {
   .vinyl-grid {

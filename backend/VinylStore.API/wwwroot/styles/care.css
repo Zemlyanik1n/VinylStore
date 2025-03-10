@@ -98,3 +98,14 @@ footer {
   border-bottom: 2px solid #ff9800;
   padding-bottom: 5px;
 }
+
+footer {
+  width: 100%;
+  text-align: center;
+  padding: 1rem 0;
+  background-color: #222;
+  color: #fff;
+  box-sizing: border-box;
+  margin-top: auto;
+  position: relative;
+}

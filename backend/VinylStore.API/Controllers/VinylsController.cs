@@ -50,4 +50,26 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
+    [HttpGet("suggestions")]
+    public async Task<IActionResult> GetSuggestions([FromQuery] string query)
+    {
+        const int numOfSuggestions = 5; // количество подсказок, пока оставлю здесь, позже подумать, куда убрать
+        try
+        {
+            if (!string.IsNullOrEmpty(query) && query.Length > 2)
+            {
+                var result = await vinylsService.GetSuggestions(query, numOfSuggestions);
+                return Ok(result);
+            }
+            else
+            {
+                throw new Exception("query string lenght must be more than 2");
+            }
+        }
+        catch (Exception e)
+        {
+            return StatusCode(500, e.Message);
+        }
+    }
 }

@@ -95,17 +95,31 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
             .Where(v => v.Id == id)
             .ExecuteDeleteAsync(ct);
     }
-    
 
-    // условный умный поиск - не совсем разумно использовать запрос к бд каждый раз
-    // public async Task<IEnumerable<VinylPlate>> GetBySmartSearch(string albumName)
-    // {
-    //     var result = _context.VinylPlates
-    //         .AsNoTracking()
-    //         .Include(v => v.Album)
-    //         .Where(v => v.Album.AlbumName.ToLower().Contains(albumName.ToLower()));
-    //
-    //     return await result.ToListAsync();
-    // }
+    public async Task<IEnumerable<VinylPlate>> GetSuggestions(string searchQuery, int count)
+    {
+        searchQuery = searchQuery.ToLower();
+        var vinylsAlbums = await _context.VinylPlates
+            .AsNoTracking()
+            .Include(v => v.Album)
+            .Where(v => v.Album.AlbumName.ToLower().Contains(searchQuery))
+            .Take(count)
+            .ToListAsync();
+        var remaining = count - vinylsAlbums.Count;
+
+        if (remaining > 0)
+        {
+            var ids = vinylsAlbums.Select(v => v.Id).ToList();
+            var vinylsArtists = await _context.VinylPlates
+                .AsNoTracking()
+                .Include(v => v.Album)
+                .Where(v => v.Album.ArtistName.ToLower().Contains(searchQuery)
+                            && !ids.Contains(v.Id) )
+                .Take(remaining)
+                .ToListAsync();
+            vinylsAlbums.AddRange(vinylsArtists);
+        }
+        return vinylsAlbums;
+    }
 
 }

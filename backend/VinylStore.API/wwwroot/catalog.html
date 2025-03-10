@@ -33,7 +33,10 @@
     <aside class="filters-sidebar">
       <h2>Фильтры</h2>
       <div class="filter-group">
-        <input type="text" id="search" placeholder="Поиск...">
+        <div class="search-container">
+          <input type="text" id="header-search" placeholder="Поиск альбомов и исполнителей...">
+          <div id="search-suggestions" class="search-suggestions"></div>
+        </div>
       </div>
       <div class="filter-group">
         <select id="genre">
@@ -101,7 +104,7 @@
       const params = new URLSearchParams({
         page: currentPage,
         pageSize,
-        search: document.getElementById('search').value.toLowerCase().trim(),
+        search: document.getElementById('header-search').value.toLowerCase().trim(),
         genre: document.getElementById('genre').value,
         minPrice: document.getElementById('minPrice').value,
         maxPrice: document.getElementById('maxPrice').value,
@@ -189,7 +192,61 @@
     enforceMinMax(document.getElementById('maxPrice'), 0, Infinity);
     enforceMinMax(document.getElementById('year'), 1700, new Date().getFullYear());
   });
+  
+  // умный поиск
+  let searchTimeout;
 
+  document.getElementById('header-search').addEventListener('input', function(e) {
+    const query = e.target.value.trim();
+    const suggestionsContainer = document.getElementById('search-suggestions');
+
+    clearTimeout(searchTimeout);
+
+    if(query.length < 3) {
+      suggestionsContainer.classList.remove('visible');
+      return;
+    }
+
+    suggestionsContainer.classList.add('visible');
+
+    searchTimeout = setTimeout(async () => {
+      try {
+        const response = await fetch(`/api/vinyls/suggestions?query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        console.log(data)
+
+        suggestionsContainer.innerHTML = data.map(item => `
+          <div class="suggestion-item" data-id="${item.vinylPlateId}">
+            <img src="${item.coverImageUrl}" alt="${item.albumName}" 
+                 onerror="this.src='default-image.jpg'">
+            <div>
+              <div>${item.albumName}</div>
+              <small>${item.artistName}</small>
+            </div>
+          </div>
+        `).join('');
+
+        // Обработчик клика по подсказкам
+        document.querySelectorAll('.suggestion-item').forEach(item => {
+          item.addEventListener('click', () => {
+            window.location.href = `/vinyl.html?id=${item.dataset.id}`;
+          });
+        });
+
+      } catch (error) {
+        console.error('Ошибка поиска:', error);
+        suggestionsContainer.innerHTML = '<div class="suggestion-item">Ошибка загрузки</div>';
+      }
+    }, 300);
+  });
+
+  // Скрываем подсказки при клике вне области
+  document.addEventListener('click', (e) => {
+    if(!e.target.closest('.search-container')) {
+      document.getElementById('search-suggestions').classList.remove('visible');
+    }
+  });
+  
   function renderVinyls(items, reset) {
     const grid = document.getElementById('vinyl-grid');
     if (reset) grid.innerHTML = '';

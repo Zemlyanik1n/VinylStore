@@ -55,7 +55,6 @@ public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenres
             totalCount
         );
     }
-
     public async Task<IEnumerable<GenreResponse>> GetUniqueGenres()
     {
         var genres = await genresRepository.GetUnique();
@@ -66,7 +65,6 @@ public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenres
         });
         return result;
     }
-
     public async Task<VinylPlateResponse?> GetVinylPlateById(long id)
     {
         var vinylPlate = await vinylPlatesRepository.GetById(id);
@@ -116,5 +114,18 @@ public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenres
                     .ToList()
             }
         };
+    }
+    public async Task<IEnumerable<VinylSuggestionResponse>> GetSuggestions(string search, int count)
+    {
+        var vinyls = await vinylPlatesRepository.GetSuggestions(search, count);
+            var result = vinyls.Select(v => new VinylSuggestionResponse
+            {
+                VinylPlateId = v.Id,
+                AlbumName = v.Album.AlbumName,
+                ArtistName = v.Album.ArtistName,
+                CoverImageUrl = v.CoverImageUrl,
+            });
+
+            return result;
     }
 }

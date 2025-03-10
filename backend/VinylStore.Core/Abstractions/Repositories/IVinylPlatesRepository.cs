@@ -10,4 +10,5 @@ public interface IVinylPlatesRepository
     Task<VinylPlate?> GetById(long id);
     Task Create(VinylPlate vinylPlate, CancellationToken ct);
     Task Delete(long id, CancellationToken ct);
+    Task<IEnumerable<VinylPlate>> GetSuggestions(string searchQuery, int count);
 }

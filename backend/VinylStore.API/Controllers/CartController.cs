@@ -6,7 +6,7 @@ namespace VinylStore.Controllers;
 [Route("api/[controller]")]
 public class CartController : ControllerBase
 {
-    [HttpGet("{userId:long}")]
+    /*[HttpGet("{userId:long}")]
     public async Task<IActionResult> GetCart(long userId)
     {
         throw new NotImplementedException();
@@ -35,5 +35,5 @@ public class CartController : ControllerBase
     public async Task<IActionResult> CreateCart()
     {
         throw new NotImplementedException();
-    }
+    }*/
 }
