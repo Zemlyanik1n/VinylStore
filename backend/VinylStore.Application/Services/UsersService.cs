@@ -1,5 +1,6 @@
 namespace VinylStore.Application.Services;
 
-public class CartService
+public class UsersService
 {
+    
 }

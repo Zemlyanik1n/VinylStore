@@ -15,6 +15,6 @@ public class User
     
     public long CartId { get; set; }
     public Cart Cart { get; set; }
-    public virtual ICollection<DeliveryAddress>? DeliveryAddresses { get; set; } = [];
-    public virtual ICollection<Order>? Orders { get; set; } = [];
+    public ICollection<DeliveryAddress>? DeliveryAddresses { get; set; } = [];
+    public ICollection<Order>? Orders { get; set; } = [];
 }

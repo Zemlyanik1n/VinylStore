@@ -34,7 +34,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("GenresId");
 
-                    b.ToTable("AlbumGenre");
+                    b.ToTable("AlbumGenre", (string)null);
                 });
 
             modelBuilder.Entity("DeliveryAddressUser", b =>
@@ -49,7 +49,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("DeliveryAddressUser");
+                    b.ToTable("DeliveryAddressUser", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.Album", b =>
@@ -84,7 +84,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Albums");
+                    b.ToTable("Albums", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.Cart", b =>
@@ -103,7 +103,7 @@ namespace VinylStore.Persistence.Migrations
                     b.HasIndex("UserId")
                         .IsUnique();
 
-                    b.ToTable("Carts");
+                    b.ToTable("Carts", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.CartItem", b =>
@@ -129,7 +129,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("VinylPlateId");
 
-                    b.ToTable("CartItems");
+                    b.ToTable("CartItems", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.DeliveryAddress", b =>
@@ -167,7 +167,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("DeliveryAddresses");
+                    b.ToTable("DeliveryAddresses", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.Genre", b =>
@@ -184,7 +184,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Genres");
+                    b.ToTable("Genres", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.Order", b =>
@@ -214,7 +214,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.OrderItem", b =>
@@ -240,7 +240,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("VinylPlateId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItem", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.Track", b =>
@@ -268,7 +268,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("AlbumId");
 
-                    b.ToTable("Tracks");
+                    b.ToTable("Tracks", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.User", b =>
@@ -308,7 +308,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("VinylStore.Core.Models.VinylPlate", b =>
@@ -350,7 +350,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("AlbumId");
 
-                    b.ToTable("VinylPlates");
+                    b.ToTable("VinylPlates", (string)null);
                 });
 
             modelBuilder.Entity("AlbumGenre", b =>

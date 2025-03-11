@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using Microsoft.AspNetCore.Mvc;
+using VinylStore.Application.Abstractions;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.Services;
 

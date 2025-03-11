@@ -1,4 +1,5 @@
-﻿using VinylStore.Application.DTOs.Requests;
+﻿using VinylStore.Application.Abstractions;
+using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.DTOs.Responses;
 using VinylStore.Application.Queries;
 using VinylStore.Core.Abstractions.Repositories;
@@ -124,6 +125,9 @@ public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenres
                 AlbumName = v.Album.AlbumName,
                 ArtistName = v.Album.ArtistName,
                 CoverImageUrl = v.CoverImageUrl,
+                Manufacturer = v.Manufacturer,
+                ReleaseYear = v.Album.ReleaseYear,
+                PrintYear = v.PrintYear,
             });
 
             return result;

@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using VinylStore.Application.Abstractions;
 using VinylStore.Application.Services;
 using VinylStore.Core.Abstractions;
 using VinylStore.Core.Abstractions.Repositories;
@@ -36,7 +37,7 @@ app.Use(async (context, next) =>
     
     await next();
     
-    logger.LogInformation("Ответ: {StatusCode}", context.Response.StatusCode);
+    logger.LogInformation("Ответ: {StatusCode}, {Answer}", context.Response.StatusCode, context.Response.Body.ToString());
 });
 
 if (app.Environment.IsDevelopment())
@@ -50,4 +51,3 @@ if (app.Environment.IsDevelopment())
 app.MapControllers();
 
 app.Run();
-
