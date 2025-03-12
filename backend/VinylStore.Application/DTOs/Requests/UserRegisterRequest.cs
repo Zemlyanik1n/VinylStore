@@ -8,6 +8,4 @@ public record UserRegisterRequest()
     public string Email { get; init; }
     [Required]
     public string Password { get; init; }
-    [Required]
-    public string Login { get; init; }
 }

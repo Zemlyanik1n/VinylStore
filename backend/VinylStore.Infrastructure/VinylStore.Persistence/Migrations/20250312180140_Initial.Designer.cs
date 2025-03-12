@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using VinylStore.Persistence;
@@ -11,9 +12,11 @@ using VinylStore.Persistence;
 namespace VinylStore.Persistence.Migrations
 {
     [DbContext(typeof(VinylStoreDbContext))]
-    partial class VinylStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250312180140_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -278,7 +281,7 @@ namespace VinylStore.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<long?>("CartId")
+                    b.Property<long>("CartId")
                         .HasColumnType("bigint");
 
                     b.Property<string>("Email")
@@ -286,9 +289,15 @@ namespace VinylStore.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("FirstName")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Password")
@@ -296,6 +305,7 @@ namespace VinylStore.Persistence.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhoneNumber")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -484,7 +494,8 @@ namespace VinylStore.Persistence.Migrations
 
             modelBuilder.Entity("VinylStore.Core.Models.User", b =>
                 {
-                    b.Navigation("Cart");
+                    b.Navigation("Cart")
+                        .IsRequired();
 
                     b.Navigation("Orders");
                 });

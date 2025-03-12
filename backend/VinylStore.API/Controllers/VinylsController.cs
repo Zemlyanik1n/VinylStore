@@ -51,7 +51,12 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
-
+    /// <summary>
+    /// Получить список первых совпадений альбомов и музыкантов по введеной строке
+    /// </summary>
+    /// <param name="query"> строка подзапроса поиска</param>
+    /// <returns>список совпадений винила</returns>
+    /// <exception cref="Exception"></exception>
     [HttpGet("suggestions")]
     public async Task<IActionResult> GetSuggestions([FromQuery] string query)
     {

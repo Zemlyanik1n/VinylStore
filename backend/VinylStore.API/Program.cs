@@ -1,20 +1,16 @@
-using Microsoft.EntityFrameworkCore;
 using VinylStore.Application.Abstractions;
 using VinylStore.Application.Services;
-using VinylStore.Core.Abstractions;
 using VinylStore.Core.Abstractions.Repositories;
+using VinylStore.Extensions;
 using VinylStore.Persistence;
 using VinylStore.Persistence.Repositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddOpenApi();
-builder.Services.AddSwaggerGen();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddDbContext<VinylStoreDbContext>();
-
+builder.Services.AddSwaggerDocumentation();
 builder.Services.AddScoped<IVinylsService, VinylsService>();
 builder.Services.AddScoped<IVinylPlatesRepository, VinylPlatesRepository>();
 builder.Services.AddScoped<IGenresRepository, GenresRepository>();
@@ -40,11 +36,11 @@ app.Use(async (context, next) =>
     logger.LogInformation("Ответ: {StatusCode}, {Answer}", context.Response.StatusCode, context.Response.Body.ToString());
 });
 
+app.UseSwaggerDocumentation();
+
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
-    app.UseSwagger();
-    app.UseSwaggerUI();
     app.MapOpenApi();
 }
 

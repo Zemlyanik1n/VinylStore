@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
@@ -6,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace VinylStore.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class init : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -65,8 +66,7 @@ namespace VinylStore.Persistence.Migrations
                 name: "Users",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Login = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
                     PhoneNumber = table.Column<string>(type: "text", nullable: false),
@@ -158,7 +158,7 @@ namespace VinylStore.Persistence.Migrations
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -176,7 +176,7 @@ namespace VinylStore.Persistence.Migrations
                 columns: table => new
                 {
                     DeliveryAddressesId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false)
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -203,7 +203,7 @@ namespace VinylStore.Persistence.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Status = table.Column<string>(type: "text", nullable: false),
                     TotalPrice = table.Column<decimal>(type: "numeric", nullable: false),
-                    UserId = table.Column<long>(type: "bigint", nullable: false),
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     DeliveryAddressId = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>

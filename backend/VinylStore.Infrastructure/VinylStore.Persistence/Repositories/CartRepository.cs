@@ -7,7 +7,7 @@ public class CartRepository(VinylStoreDbContext context)
 {
     private readonly VinylStoreDbContext _context = context;
 
-    public async Task<Cart?> GetByUserId(long userId)
+    public async Task<Cart?> GetByUserId(Guid userId)
     {
         return await context.Carts
             .AsNoTracking()
