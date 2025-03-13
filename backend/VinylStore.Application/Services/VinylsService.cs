@@ -1,4 +1,4 @@
-﻿using VinylStore.Application.Abstractions;
+﻿using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.DTOs.Responses;
 using VinylStore.Application.Queries;

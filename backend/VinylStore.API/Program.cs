@@ -1,7 +1,10 @@
-using VinylStore.Application.Abstractions;
+using Microsoft.AspNetCore.CookiePolicy;
+using VinylStore.Application.Abstractions.Auth;
+using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.Services;
 using VinylStore.Core.Abstractions.Repositories;
 using VinylStore.Extensions;
+using VinylStore.Infrastructure;
 using VinylStore.Persistence;
 using VinylStore.Persistence.Repositories;
 
@@ -10,10 +13,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddDbContext<VinylStoreDbContext>();
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
 builder.Services.AddSwaggerDocumentation();
+builder.Services.AddApiAuthentication(builder.Configuration);
+
 builder.Services.AddScoped<IVinylsService, VinylsService>();
+builder.Services.AddScoped<IUsersService, UsersService>();
+
 builder.Services.AddScoped<IVinylPlatesRepository, VinylPlatesRepository>();
 builder.Services.AddScoped<IGenresRepository, GenresRepository>();
+builder.Services.AddScoped<IUsersRepository, UsersRepository>();
+
+builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
 
 var app = builder.Build();
 
@@ -33,7 +47,7 @@ app.Use(async (context, next) =>
     
     await next();
     
-    logger.LogInformation("Ответ: {StatusCode}, {Answer}", context.Response.StatusCode, context.Response.Body.ToString());
+    logger.LogInformation("Ответ: {StatusCode}", context.Response.StatusCode);
 });
 
 app.UseSwaggerDocumentation();
@@ -44,6 +58,17 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
+app.UseHttpsRedirection();
+
+app.UseCookiePolicy(new CookiePolicyOptions()
+{
+    MinimumSameSitePolicy = SameSiteMode.Strict,
+    Secure = CookieSecurePolicy.Always,
+    HttpOnly = HttpOnlyPolicy.Always
+});
+
+app.UseAuthentication();
+app.UseAuthorization();
 app.MapControllers();
 
 app.Run();

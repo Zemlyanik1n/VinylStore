@@ -1,6 +1,8 @@
 using System.Runtime.CompilerServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VinylStore.Application.Abstractions;
+using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.Services;
 
@@ -10,12 +12,14 @@ namespace VinylStore.Controllers;
 [Route("api/[controller]")]
 public class VinylsController(IVinylsService vinylsService) : ControllerBase
 {
+    private readonly IVinylsService _vinylsService = vinylsService;
+    
     [HttpGet("catalog")]
     public async Task<IActionResult> GetVinylsWithFilters([FromQuery] VinylFilterRequest filter)
     {
         try
         {
-            var result = await vinylsService.GetFilteredPagedVinyls(filter);
+            var result = await _vinylsService.GetFilteredPagedVinyls(filter);
             return Ok(result);
         }
         catch (Exception ex)
@@ -29,7 +33,7 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
     {
         try
         {
-            var result = await vinylsService.GetUniqueGenres();
+            var result = await _vinylsService.GetUniqueGenres();
             return Ok(result);
         }
         catch (Exception e)
@@ -43,7 +47,7 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
     {
         try
         {
-            var result = await vinylsService.GetVinylPlateById(id);
+            var result = await _vinylsService.GetVinylPlateById(id);
             return Ok(result);
         }
         catch (Exception e)
@@ -65,7 +69,7 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
         {
             if (!string.IsNullOrEmpty(query) && query.Length > 2)
             {
-                var result = await vinylsService.GetSuggestions(query, numOfSuggestions);
+                var result = await _vinylsService.GetSuggestions(query, numOfSuggestions);
                 return Ok(result);
             }
             else

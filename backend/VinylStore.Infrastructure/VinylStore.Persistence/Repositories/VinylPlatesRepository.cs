@@ -73,14 +73,14 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
                 .Take(filter.PageSize);
     }
     public async Task<VinylPlate?> GetById(long id)
-    { // may be errors, catch
+    {
         return await _context.VinylPlates
             .AsNoTracking()
             .Include(v => v.Album)
             .ThenInclude(a => a.Genres)
             .Include(v => v.Album)
             .ThenInclude(a => a.Tracks)
-            .SingleOrDefaultAsync(p => p.Id == id);
+            .FirstOrDefaultAsync(p => p.Id == id);
     }
 
     public async Task Create(VinylPlate vinylPlate, CancellationToken ct)

@@ -1,7 +1,7 @@
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.DTOs.Responses;
 
-namespace VinylStore.Application.Abstractions;
+namespace VinylStore.Application.Abstractions.Services;
 
 public interface IVinylsService
 {
