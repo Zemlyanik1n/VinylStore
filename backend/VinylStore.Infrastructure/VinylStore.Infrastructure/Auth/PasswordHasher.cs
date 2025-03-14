@@ -1,7 +1,6 @@
-using VinylStore.Application.Abstractions;
 using VinylStore.Application.Abstractions.Auth;
 
-namespace VinylStore.Infrastructure;
+namespace VinylStore.Infrastructure.Auth;
 
 public class PasswordHasher : IPasswordHasher
 {

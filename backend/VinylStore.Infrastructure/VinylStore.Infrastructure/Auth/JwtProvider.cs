@@ -6,7 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 using VinylStore.Application.Abstractions.Auth;
 using VinylStore.Core.Models;
 
-namespace VinylStore.Infrastructure;
+namespace VinylStore.Infrastructure.Auth;
 
 public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 {
@@ -14,7 +14,7 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
 
     public string GenerateToken(User user)
     {
-        List<Claim> claims = [new("userId", user.Id.ToString())];
+        List<Claim> claims = [new(CustomClaims.UserId, user.Id.ToString())];
         
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),

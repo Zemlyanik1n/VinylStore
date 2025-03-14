@@ -1,6 +1,6 @@
 namespace VinylStore.Application.DTOs.Requests;
 
-public class VinylFilterRequest
+public record VinylFilterRequest
 {
     public string? Search { get; set; }
     public string? Genre { get; set; }

@@ -1,13 +1,17 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using VinylStore.Core.Abstractions.Filters;
 using VinylStore.Core.Abstractions.Repositories;
 using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Repositories;
 
-public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRepository
+public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) : IVinylPlatesRepository
 {
     private readonly VinylStoreDbContext _context = context;
+    private readonly IMapper _mapper = mapper;
+
     public async Task<(IEnumerable<VinylPlate> Items, int TotalCount)> GetAllFilteredPagedAsync(IVinylFilter filter)
     {
         var baseQuery = BuildQuery(filter); 
@@ -19,10 +23,10 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
         var pagedQuery = ApplyPaging(baseQuery, filter);
         var items = await pagedQuery.ToListAsync();
     
-        return (items, totalCount);
+        return (_mapper.Map<IEnumerable<VinylPlate>>(items), totalCount);
     }
 
-    public IQueryable<VinylPlate> BuildQuery(IVinylFilter filter)
+    public IQueryable<VinylPlateEntity> BuildQuery(IVinylFilter filter)
     {
         var query = _context.VinylPlates
             .AsNoTracking()
@@ -66,7 +70,7 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
         return query;
     }
 
-    private static IQueryable<VinylPlate> ApplyPaging(IQueryable<VinylPlate> query, IVinylFilter filter)
+    private static IQueryable<VinylPlateEntity> ApplyPaging(IQueryable<VinylPlateEntity> query, IVinylFilter filter)
     {
         return query
                 .Skip((filter.Page - 1) * filter.PageSize)
@@ -74,18 +78,20 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
     }
     public async Task<VinylPlate?> GetById(long id)
     {
-        return await _context.VinylPlates
+        var result =  await _context.VinylPlates
             .AsNoTracking()
             .Include(v => v.Album)
             .ThenInclude(a => a.Genres)
             .Include(v => v.Album)
             .ThenInclude(a => a.Tracks)
             .FirstOrDefaultAsync(p => p.Id == id);
+        return _mapper.Map<VinylPlate>(result);
     }
 
     public async Task Create(VinylPlate vinylPlate, CancellationToken ct)
     {
-        await _context.VinylPlates.AddAsync(vinylPlate, ct);
+        var vinylPlateEntity = _mapper.Map<VinylPlateEntity>(vinylPlate);
+        await _context.VinylPlates.AddAsync(vinylPlateEntity, ct);
         await _context.SaveChangesAsync(ct);
     }
 
@@ -119,7 +125,7 @@ public class VinylPlatesRepository(VinylStoreDbContext context) : IVinylPlatesRe
                 .ToListAsync();
             vinylsAlbums.AddRange(vinylsArtists);
         }
-        return vinylsAlbums;
+        return _mapper.Map<IEnumerable<VinylPlate>>(vinylsAlbums);
     }
 
 }

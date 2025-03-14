@@ -1,6 +1,6 @@
 namespace VinylStore.Application.DTOs.Requests;
 
-public class VinylRequest
+public record VinylRequest
 {
     public long Id { get; set; }
 }

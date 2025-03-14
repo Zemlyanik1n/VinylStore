@@ -1,14 +1,14 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using VinylStore.Infrastructure;
+using VinylStore.Infrastructure.Auth;
 
 namespace VinylStore.Extensions;
 
 public static class AddApiAuth
 {
-    public static IServiceCollection AddApiAuthentication(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddApiAuthentication(this IServiceCollection services,
+        IConfiguration configuration)
     {
         var jwtOptions = configuration.GetSection(nameof(JwtOptions)).Get<JwtOptions>();
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

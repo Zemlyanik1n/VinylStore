@@ -1,12 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Configurations;
 
-public class DeliveryAddressConfiguration : IEntityTypeConfiguration<DeliveryAddress>
+public class DeliveryAddressConfiguration : IEntityTypeConfiguration<DeliveryAddressEntity>
 {
-    public void Configure(EntityTypeBuilder<DeliveryAddress> builder)
+    public void Configure(EntityTypeBuilder<DeliveryAddressEntity> builder)
     {
         builder.HasKey(x => x.Id);
         

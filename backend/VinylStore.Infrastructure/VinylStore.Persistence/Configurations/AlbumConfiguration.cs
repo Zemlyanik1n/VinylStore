@@ -1,13 +1,13 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 
 namespace VinylStore.Persistence.Configurations;
 
-public class AlbumConfiguration : IEntityTypeConfiguration<Album>
+public class AlbumConfiguration : IEntityTypeConfiguration<AlbumEntity>
 {
-    public void Configure(EntityTypeBuilder<Album> builder)
+    public void Configure(EntityTypeBuilder<AlbumEntity> builder)
     {
         builder.HasKey(x => x.Id);
             
@@ -15,7 +15,7 @@ public class AlbumConfiguration : IEntityTypeConfiguration<Album>
         
         builder
             .HasMany(g => g.Genres)
-            .WithMany();
+            .WithMany(g=> g.Albums);
         
         builder
             .HasMany(v => v.VinylPlates)

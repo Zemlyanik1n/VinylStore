@@ -16,12 +16,10 @@ public static class SwaggerExtensions
                 Description = "API for Vinyl Store (with YouTube integration)",
                 Contact = new OpenApiContact { Name = "Zemlyanikin" }
             });
-            
+
             var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             c.IncludeXmlComments(xmlPath);
-
-           
         });
         return services;
     }
@@ -35,7 +33,7 @@ public static class SwaggerExtensions
             c.RoutePrefix = "api-docs";
             c.DocumentTitle = "Vinyl Store API Documentation";
         });
-        
+
         var environment = app.ApplicationServices.GetRequiredService<IWebHostEnvironment>();
         if (environment.IsDevelopment())
         {
@@ -46,6 +44,7 @@ public static class SwaggerExtensions
                     context.Response.Redirect("/api-docs");
                     return;
                 }
+
                 await next();
             });
         }

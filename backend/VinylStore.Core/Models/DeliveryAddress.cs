@@ -15,5 +15,5 @@ public class DeliveryAddress
     public int PostalCode { get; set; } = 0;
     public string StreetNumber { get; set; } = string.Empty;
     public int FlatNumber { get; set; } = 0;
-    public long UserId { get; set; }
+    public ICollection<User> Users { get; set; }
 }

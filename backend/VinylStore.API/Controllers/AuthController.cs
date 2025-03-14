@@ -7,14 +7,15 @@ namespace VinylStore.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController(IUsersService usersService) : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
-    private readonly IUsersService _usersService = usersService;
+    private readonly IAuthService _authService = authService;
     
+    [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult> Register([FromBody] UserRegisterRequest registerRequest)
     {
-        var registerResult = await _usersService.Register(registerRequest);
+        var registerResult = await _authService.Register(registerRequest);
         if (registerResult.IsFailure)
         {
             return BadRequest(registerResult.Error);
@@ -28,9 +29,10 @@ public class UsersController(IUsersService usersService) : ControllerBase
     /// <param name="loginRequest"></param>
     /// <returns></returns>
     [HttpPost("login")]
+    [AllowAnonymous]
     public async Task<ActionResult> Login([FromBody] UserLoginRequest loginRequest)
     {
-        var token = await _usersService.Login(loginRequest);
+        var token = await _authService.Login(loginRequest);
         
         if(token.IsFailure)
             return BadRequest(token.Error);
@@ -42,7 +44,7 @@ public class UsersController(IUsersService usersService) : ControllerBase
 
     [Authorize]
     [HttpPost("logout")]
-    public async Task<ActionResult> Logout()
+    public ActionResult Logout()
     {
         HttpContext.Response.Cookies.Delete("cookie");
         return Ok();

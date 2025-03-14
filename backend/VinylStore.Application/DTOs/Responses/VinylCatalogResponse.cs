@@ -1,6 +1,6 @@
 namespace VinylStore.Application.DTOs.Responses;
 
-public class VinylCatalogResponse
+public record VinylCatalogResponse
 {
     public long VinylPlateId { get; set; }
     public string CoverUrl { get; set; } = null!;

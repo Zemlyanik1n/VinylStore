@@ -1,6 +1,6 @@
 namespace VinylStore.Application.DTOs.Responses;
 
-public class VinylPlateResponse
+public record VinylPlateResponse
 {
     public long Id { get; set; }
     public long AlbumId { get; set; }
@@ -14,7 +14,7 @@ public class VinylPlateResponse
     public AlbumResponse Album { get; set; } = null!;
 }
 
-public class AlbumResponse
+public record AlbumResponse
 {
     public long Id { get; set; }
     public string AlbumName { get; set; } = null!;
@@ -26,7 +26,7 @@ public class AlbumResponse
     public List<string> Genres { get; set; } = [];
     public ICollection<TrackResponse> Tracks { get; set; } = [];
 }
-public class TrackResponse
+public record TrackResponse
 {
     public int DurationInSeconds { get; set; }
     public string FormattedDurationInSeconds { get; set; } = null!;

@@ -1,10 +1,6 @@
-using System.Runtime.CompilerServices;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VinylStore.Application.Abstractions;
 using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
-using VinylStore.Application.Services;
 
 namespace VinylStore.Controllers;
 
@@ -13,7 +9,7 @@ namespace VinylStore.Controllers;
 public class VinylsController(IVinylsService vinylsService) : ControllerBase
 {
     private readonly IVinylsService _vinylsService = vinylsService;
-    
+
     [HttpGet("catalog")]
     public async Task<IActionResult> GetVinylsWithFilters([FromQuery] VinylFilterRequest filter)
     {
@@ -55,6 +51,7 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
             return StatusCode(500, e.Message);
         }
     }
+
     /// <summary>
     /// Получить список первых совпадений альбомов и музыкантов по введеной строке
     /// </summary>

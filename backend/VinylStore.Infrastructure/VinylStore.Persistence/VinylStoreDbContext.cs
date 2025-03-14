@@ -1,26 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using VinylStore.Core.Models;
 using VinylStore.Persistence.Configurations;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence;
-public class VinylStoreDbContext : DbContext
+public class VinylStoreDbContext(IConfiguration configuration, IOptions<AuthorizationOptions> authOptions) : DbContext
 {
-    private readonly IConfiguration _configuration;
-    public VinylStoreDbContext(IConfiguration configuration)
-    {
-        _configuration = configuration;
-    }
-    
-    public DbSet<Album> Albums { get; set; }
-    public DbSet<DeliveryAddress> DeliveryAddresses { get; set; }
-    public DbSet<Genre> Genres { get; set; }
-    public DbSet<Order> Orders { get; set; }
-    public DbSet<Track> Tracks { get; set; }
-    public DbSet<User> Users { get; set; }
-    public DbSet<VinylPlate> VinylPlates { get; set; }
-    public DbSet<CartItem> CartItems { get; set; }
-    public DbSet<Cart> Carts { get; set; }
+    private readonly IConfiguration _configuration = configuration;
+    private readonly IOptions<AuthorizationOptions> _authOptions = authOptions;
+
+    public DbSet<AlbumEntity> Albums { get; set; }
+    public DbSet<DeliveryAddressEntity> DeliveryAddresses { get; set; }
+    public DbSet<GenreEntity> Genres { get; set; }
+    public DbSet<OrderEntity> Orders { get; set; }
+    public DbSet<TrackEntity> Tracks { get; set; }
+    public DbSet<UserEntity> Users { get; set; }
+    public DbSet<VinylPlateEntity> VinylPlates { get; set; }
+    public DbSet<CartItemEntity> CartItems { get; set; }
+    public DbSet<CartEntity> Carts { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
@@ -31,15 +30,8 @@ public class VinylStoreDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.UseTablespace("vinylstore");
-        modelBuilder.ApplyConfiguration(new AlbumConfiguration());
-        modelBuilder.ApplyConfiguration(new VinylPlateConfiguration());
-        modelBuilder.ApplyConfiguration(new GenreConfiguration());
-        modelBuilder.ApplyConfiguration(new OrderConfiguration());
-        modelBuilder.ApplyConfiguration(new TrackConfiguration());
-        modelBuilder.ApplyConfiguration(new UserConfiguration());
-        modelBuilder.ApplyConfiguration(new DeliveryAddressConfiguration());
-        modelBuilder.ApplyConfiguration(new CartItemConfiguration());
-        
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(VinylStoreDbContext).Assembly);
+        modelBuilder.ApplyConfiguration(new RolePermissionConfiguration(_authOptions.Value));
         base.OnModelCreating(modelBuilder);
     }
 }

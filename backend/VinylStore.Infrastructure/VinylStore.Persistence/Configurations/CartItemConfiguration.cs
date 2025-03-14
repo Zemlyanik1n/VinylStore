@@ -1,13 +1,12 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Microsoft.Extensions.Configuration;
-using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Configurations;
 
-public class CartItemConfiguration : IEntityTypeConfiguration<CartItem>
+public class CartItemConfiguration : IEntityTypeConfiguration<CartItemEntity>
 {
-    public void Configure(EntityTypeBuilder<CartItem> builder)
+    public void Configure(EntityTypeBuilder<CartItemEntity> builder)
     {
         builder.HasKey(x => x.Id);
         

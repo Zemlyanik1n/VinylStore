@@ -1,16 +1,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Configurations;
 
-public class OrderConfiguration : IEntityTypeConfiguration<Order>
+public class OrderConfiguration : IEntityTypeConfiguration<OrderEntity>
 {
-    public void Configure(EntityTypeBuilder<Order> builder)
+    public void Configure(EntityTypeBuilder<OrderEntity> builder)
     {
         builder.HasKey(o => o.Id);
 
-        // добавить еще один слой с entities для работы с бд.
         builder
             .HasOne(d => d.DeliveryAddress)
             .WithMany()

@@ -2,9 +2,9 @@ namespace VinylStore.Core.Models;
 
 public class CartItem
 {
-    public long Id { get; set; }
     private CartItem()
     { }
+    public long Id { get; set; }
     public long VinylPlateId { get; set; }
     public VinylPlate VinylPlate { get; set; }
     public long CartId { get; set; }

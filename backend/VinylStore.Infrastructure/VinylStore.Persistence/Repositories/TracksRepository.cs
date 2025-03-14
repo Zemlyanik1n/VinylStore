@@ -1,19 +1,23 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using VinylStore.Core.Abstractions;
 using VinylStore.Core.Abstractions.Repositories;
 using VinylStore.Core.Models;
+using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Repositories;
 
-public class TracksRepository(VinylStoreDbContext context) : ITracksRepository
+public class TracksRepository(VinylStoreDbContext context, IMapper mapper) : ITracksRepository
 {
     private readonly VinylStoreDbContext _context = context;
-    
+    private readonly IMapper _mapper = mapper;
+
     public async Task<IEnumerable<Track>> GetAll(CancellationToken ct)
     {
-        return await _context.Tracks
+        var result= await _context.Tracks
             .AsNoTracking()
-            .ToListAsync(ct);   
+            .ToListAsync(ct); 
+        return _mapper.Map<IEnumerable<Track>>(result);
     }
 
     public async Task<Track?> GetById(long id, CancellationToken ct)
@@ -21,12 +25,13 @@ public class TracksRepository(VinylStoreDbContext context) : ITracksRepository
         var track = await _context.Tracks
             .AsNoTracking()
             .FirstOrDefaultAsync(t => t.Id == id, ct);
-        return track;
+        return _mapper.Map<Track>(track);
     }
 
     public async Task Create(Track track, CancellationToken ct)
     {
-        await _context.Tracks.AddAsync(track, ct);
+        var trackEntity = _mapper.Map<TrackEntity>(track);
+        await _context.Tracks.AddAsync(trackEntity, ct);
         await _context.SaveChangesAsync(ct);
     }
 

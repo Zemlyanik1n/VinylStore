@@ -1,32 +1,36 @@
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using VinylStore.Application.Abstractions.Auth;
 using VinylStore.Application.Abstractions.Services;
+using VinylStore.Application.Extensions;
 using VinylStore.Application.Services;
-using VinylStore.Core.Abstractions.Repositories;
 using VinylStore.Extensions;
-using VinylStore.Infrastructure;
+using VinylStore.Infrastructure.Auth;
 using VinylStore.Persistence;
-using VinylStore.Persistence.Repositories;
+using VinylStore.Persistence.Mappings;
+using AuthorizationOptions = VinylStore.Persistence.AuthorizationOptions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddDbContext<VinylStoreDbContext>();
 
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions)));
-builder.Services.AddSwaggerDocumentation();
-builder.Services.AddApiAuthentication(builder.Configuration);
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions))); // дописать exts для токенов
+builder.Services.Configure<AuthorizationOptions>(builder.Configuration.GetSection(nameof(AuthorizationOptions))); // дописать exts для токенов
 
-builder.Services.AddScoped<IVinylsService, VinylsService>();
-builder.Services.AddScoped<IUsersService, UsersService>();
+builder.Services.AddPersistence(builder.Configuration); // бд
+builder.Services.AddApplication(); // сервисы
+builder.Services.AddAutoMapper(typeof(DataBaseMappings));
+builder.Services.AddSwaggerDocumentation(); 
+builder.Services.AddApiAuthentication(builder.Configuration); // аутентификация
 
-builder.Services.AddScoped<IVinylPlatesRepository, VinylPlatesRepository>();
-builder.Services.AddScoped<IGenresRepository, GenresRepository>();
-builder.Services.AddScoped<IUsersRepository, UsersRepository>();
-
-builder.Services.AddScoped<IJwtProvider, JwtProvider>();
+builder.Services.AddScoped<IJwtProvider, JwtProvider>(); // дописать exts для токенов
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
+builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
+builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
+
 
 
 var app = builder.Build();
