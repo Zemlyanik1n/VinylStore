@@ -9,7 +9,7 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItemEntity>
     public void Configure(EntityTypeBuilder<CartItemEntity> builder)
     {
         builder.HasKey(x => x.Id);
-        
+
         builder
             .HasOne(c => c.Cart)
             .WithMany(c => c.CartItems)
@@ -19,7 +19,5 @@ public class CartItemConfiguration : IEntityTypeConfiguration<CartItemEntity>
             .HasOne(c => c.VinylPlate)
             .WithMany()
             .HasForeignKey(c => c.VinylPlateId);
-        
-        
     }
 }

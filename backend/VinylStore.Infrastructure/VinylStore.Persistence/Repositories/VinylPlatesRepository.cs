@@ -14,15 +14,15 @@ public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) 
 
     public async Task<(IEnumerable<VinylPlate> Items, int TotalCount)> GetAllFilteredPagedAsync(IVinylFilter filter)
     {
-        var baseQuery = BuildQuery(filter); 
-    
+        var baseQuery = BuildQuery(filter);
+
         // Запрос для общего количества (БЕЗ пагинации)
-        var totalCount = await baseQuery.CountAsync(); 
-    
+        var totalCount = await baseQuery.CountAsync();
+
         // Запрос для данных (С пагинацией)
         var pagedQuery = ApplyPaging(baseQuery, filter);
         var items = await pagedQuery.ToListAsync();
-    
+
         return (_mapper.Map<IEnumerable<VinylPlate>>(items), totalCount);
     }
 
@@ -33,24 +33,24 @@ public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) 
             .Include(v => v.Album)
             .ThenInclude(a => a.Genres)
             .AsSplitQuery();
-            //.AsQueryable();
+        //.AsQueryable();
 
-            if (!string.IsNullOrEmpty(filter.Search))
-            {
-                query = query.Where(v => (v.Album.AlbumName.ToLower().Contains(filter.Search.ToLower())
-                    || v.Album.ArtistName.ToLower().Contains(filter.Search.ToLower())));
-            }
+        if (!string.IsNullOrEmpty(filter.Search))
+        {
+            query = query.Where(v => (v.Album.AlbumName.ToLower().Contains(filter.Search.ToLower())
+                                      || v.Album.ArtistName.ToLower().Contains(filter.Search.ToLower())));
+        }
 
-            if (filter.MinPrice != null)
+        if (filter.MinPrice != null)
             query = query.Where(v => v.Price >= filter.MinPrice);
-        
-        if(filter.MaxPrice != null)
+
+        if (filter.MaxPrice != null)
             query = query.Where(v => v.Price <= filter.MaxPrice);
-        
-        if(filter.ReleaseType != null)
+
+        if (filter.ReleaseType != null)
             query = query.Where(v => v.Album.ReleaseType == filter.ReleaseType);
-        
-        if(filter.ReleaseYear != null)
+
+        if (filter.ReleaseYear != null)
             query = query.Where(v => v.Album.ReleaseYear == filter.ReleaseYear);
 
         if (!string.IsNullOrEmpty(filter.Genre))
@@ -73,12 +73,13 @@ public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) 
     private static IQueryable<VinylPlateEntity> ApplyPaging(IQueryable<VinylPlateEntity> query, IVinylFilter filter)
     {
         return query
-                .Skip((filter.Page - 1) * filter.PageSize)
-                .Take(filter.PageSize);
+            .Skip((filter.Page - 1) * filter.PageSize)
+            .Take(filter.PageSize);
     }
+
     public async Task<VinylPlate?> GetById(long id)
     {
-        var result =  await _context.VinylPlates
+        var result = await _context.VinylPlates
             .AsNoTracking()
             .Include(v => v.Album)
             .ThenInclude(a => a.Genres)
@@ -120,12 +121,12 @@ public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) 
                 .AsNoTracking()
                 .Include(v => v.Album)
                 .Where(v => v.Album.ArtistName.ToLower().Contains(searchQuery)
-                            && !ids.Contains(v.Id) )
+                            && !ids.Contains(v.Id))
                 .Take(remaining)
                 .ToListAsync();
             vinylsAlbums.AddRange(vinylsArtists);
         }
+
         return _mapper.Map<IEnumerable<VinylPlate>>(vinylsAlbums);
     }
-
 }

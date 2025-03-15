@@ -6,5 +6,5 @@ public class CartEntity
     public Guid UserId { get; set; }
     public UserEntity User { get; set; }
 
-    public ICollection<CartItemEntity> CartItems { get; set; } = [];
+    public ICollection<CartItemEntity> CartItems { get; set; }
 }

@@ -14,7 +14,7 @@ public class UserEntity
 
     public long? CartId { get; set; }
     public CartEntity? Cart { get; set; }
-    public ICollection<DeliveryAddressEntity>? DeliveryAddresses { get; set; }
-    public ICollection<OrderEntity>? Orders { get; set; }
-    public ICollection<RoleEntity> Roles { get; set; }
+    public ICollection<DeliveryAddressEntity>? DeliveryAddresses { get; set; } = [];
+    public ICollection<OrderEntity>? Orders { get; set; } = [];
+    public ICollection<RoleEntity> Roles { get; set; } = [];
 }

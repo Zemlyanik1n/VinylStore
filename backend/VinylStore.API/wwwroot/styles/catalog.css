@@ -1,337 +1,335 @@
 /* Base styles */
 body {
-  margin: 0;
-  padding: 0;
-  font-family: 'Arial', sans-serif;
-  background: #f5f5f5;
-  color: #333;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
 }
 
 header {
-  background-color: #222;
-  color: #fff;
-  padding: 1rem 0;
-  text-align: center;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background-color: #222;
+    color: #fff;
+    padding: 1rem 0;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 header .logo {
-  font-size: 2rem;
+    font-size: 2rem;
 }
 
 nav ul {
-  display: flex;
-  list-style: none;
-  justify-content: center;
-  padding: 0;
-  margin: 0;
+    display: flex;
+    list-style: none;
+    justify-content: center;
+    padding: 0;
+    margin: 0;
 }
 
 nav ul li {
-  margin: 0 15px;
+    margin: 0 15px;
 }
 
 nav ul li a {
-  color: #fff;
-  text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s;
+    color: #fff;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
 }
 
 nav ul li a:hover,
 nav ul li a.active {
-  color: #ff9800;
+    color: #ff9800;
 }
 
 /* Main content */
 .catalog-container {
-  display: grid;
-  grid-template-columns: 1fr 300px;
-  gap: 2rem;
-  padding: 2rem;
-  max-width: 1400px;
-  margin: 0 auto;
-  flex: 1;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 2rem;
+    padding: 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+    flex: 1;
 }
 
 /* Filters sidebar */
 .filters-sidebar {
-  background: white;
-  padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  height: fit-content;
-  position: sticky;
-  top: 100px;
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    height: fit-content;
+    position: sticky;
+    top: 100px;
 }
 
 .filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
 }
 
 
 .filter-group input,
 .filter-group select {
-  width: 100%;
-  padding: 0.5rem;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  margin-top: 0.5rem;
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 3px;
+    margin-top: 0.5rem;
 }
 
 /* В файле catalog.css добавьте */
 .filter-group .search-container {
-  width: 100%;
+    width: 100%;
 }
 
 #header-search {
-  width: 100%;
-  box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
-  margin-left: 0; /* Убираем отступ */
+    width: 100%;
+    box-sizing: border-box; /* Чтобы padding не увеличивал ширину */
+    margin-left: 0; /* Убираем отступ */
 }
 
 .search-suggestions {
-  width: 100% !important; /* Ширина как у поля ввода */
-  left: 0 !important;
-  right: 0 !important;
+    width: 100% !important; /* Ширина как у поля ввода */
+    left: 0 !important;
+    right: 0 !important;
 }
 
 /* Для всех элементов фильтров добавьте общие стили */
 .filter-group select,
 .filter-group input[type="number"],
 .filter-group input[type="text"] {
-  width: 100%;
-  box-sizing: border-box;
-  padding: 0.8rem;
-  margin: 0.3rem 0;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 0.8rem;
+    margin: 0.3rem 0;
 }
 
 /* Vinyl grid */
 .vinyl-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr); /* 4 колонки */
-  gap: 2rem;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr); /* 4 колонки */
+    gap: 2rem;
 }
 
 .vinyl-card {
-  background: white;
-  border-radius: 8px;
-  padding: 1rem;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-  transition: transform 0.3s;
+    background: white;
+    border-radius: 8px;
+    padding: 1rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s;
 }
 
 .vinyl-card:hover {
-  transform: translateY(-3px);
+    transform: translateY(-3px);
 }
 
 .vinyl-card img {
-  width: 100%;
-  height: 200px;
-  object-fit: cover;
-  border-radius: 4px;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 4px;
 }
 
 .vinyl-info {
-  padding: 1rem 0;
-  text-align: center; /* Центрирование текста */
+    padding: 1rem 0;
+    text-align: center; /* Центрирование текста */
 }
 
 .price {
-  color: #27ae60;
-  font-weight: bold;
-  font-size: 1.2rem;
-  margin: 0.5rem 0;
+    color: #27ae60;
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0.5rem 0;
 }
 
 .details-btn {
-  display: inline-block;
-  background: #ff9800;
-  color: white;
-  padding: 0.5rem 1rem;
-  border-radius: 4px;
-  text-decoration: none;
-  width: 100%;
-  text-align: center;
-  box-sizing: border-box;
+    display: inline-block;
+    background: #ff9800;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    text-decoration: none;
+    width: 100%;
+    text-align: center;
+    box-sizing: border-box;
 }
 
 .details-btn:hover {
-  background: #e68900;
+    background: #e68900;
 }
 
 /* Pagination */
 .pagination {
-  display: flex;
-  gap: 0.5rem;
-  justify-content: center;
-  margin: 2rem 0;
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    margin: 2rem 0;
 }
 
 .page-btn {
-  padding: 0.5rem 1rem;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  background: white;
-  cursor: pointer;
+    padding: 0.5rem 1rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: white;
+    cursor: pointer;
 }
 
 .page-btn.active {
-  background: #ff9800;
-  color: white;
-  border-color: #ff9800;
+    background: #ff9800;
+    color: white;
+    border-color: #ff9800;
 }
 
 /* Apply button */
 .apply-btn {
-  width: 100%;
-  padding: 1rem;
-  background: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: bold;
-  transition: background 0.3s;
+    width: 100%;
+    padding: 1rem;
+    background: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.3s;
 }
 
 .apply-btn:hover {
-  background: #e68900;
+    background: #e68900;
 }
 
 /* Responsive design */
 @media (max-width: 768px) {
-  .catalog-container {
-    grid-template-columns: 1fr;
-    padding: 1rem;
-  }
+    .catalog-container {
+        grid-template-columns: 1fr;
+        padding: 1rem;
+    }
 
-  .filters-sidebar {
-    position: static;
-    order: -1;
-    margin-bottom: 2rem;
-  }
+    .filters-sidebar {
+        position: static;
+        order: -1;
+        margin-bottom: 2rem;
+    }
 }
 
 .load-more-container {
-  text-align: center;
-  margin: 2rem 0;
+    text-align: center;
+    margin: 2rem 0;
 }
 
 .load-more-btn {
-  padding: 1rem 2rem;
-  background: #ff9800;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  cursor: pointer;
-  font-size: 1.1rem;
-  transition: transform 0.3s, background 0.3s;
+    padding: 1rem 2rem;
+    background: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 1.1rem;
+    transition: transform 0.3s, background 0.3s;
 }
 
 .load-more-btn:hover {
-  background: #e68900;
-  transform: scale(1.05);
+    background: #e68900;
+    transform: scale(1.05);
 }
 
 .load-more-btn:disabled {
-  background: #cccccc;
-  cursor: not-allowed;
-  transform: none;
+    background: #cccccc;
+    cursor: not-allowed;
+    transform: none;
 }
 
 .no-results {
-  text-align: center;
-  font-size: 1.2rem;
-  color: #666;
-  padding: 2rem;
+    text-align: center;
+    font-size: 1.2rem;
+    color: #666;
+    padding: 2rem;
 }
 
 /* умный поиск */
 .search-container {
-  position: relative;
-  margin-left: auto;
-  width: 50px;
+    position: relative;
+    margin-left: auto;
+    width: 50px;
 }
 
 #header-search {
-  width: 100%;
-  padding: 0.8rem;
+    width: 100%;
+    padding: 0.8rem;
 }
 
 .search-suggestions .suggestion-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 0.8rem;
-  cursor: pointer;
-  transition: background 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0.8rem;
+    cursor: pointer;
+    transition: background 0.2s;
 }
 
 .search-suggestions .suggestion-item img {
-  width: 40px;
-  height: 40px;
-  object-fit: cover;
-  border-radius: 4px;
-  flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    flex-shrink: 0;
 }
 
 .search-suggestions .suggestion-item > div:first-of-type {
-  flex-grow: 1;
-  min-width: 0;
+    flex-grow: 1;
+    min-width: 0;
 }
 
 .search-suggestions .suggestion-item > div:last-of-type {
-  flex-shrink: 0;
-  text-align: right;
-  margin-left: auto;
+    flex-shrink: 0;
+    text-align: right;
+    margin-left: auto;
 }
 
 .search-suggestions .suggestion-item > div:last-of-type div {
-  font-size: 0.8rem;
-  line-height: 1.3;
-  color: #666;
+    font-size: 0.8rem;
+    line-height: 1.3;
+    color: #666;
 }
 
 .search-suggestions .suggestion-item > div:last-of-type small {
-  font-size: 0.7rem;
-  color: #999;
-  display: block;
-  margin-top: 2px;
+    font-size: 0.7rem;
+    color: #999;
+    display: block;
+    margin-top: 2px;
 }
-
-
 
 
 @media (max-width: 1200px) {
-  .vinyl-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+    .vinyl-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
 }
 
 @media (max-width: 992px) {
-  .vinyl-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+    .vinyl-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 @media (max-width: 576px) {
-  .vinyl-grid {
-    grid-template-columns: 1fr;
-  }
+    .vinyl-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 footer {
-  text-align: center;
-  padding: 1rem 0;
-  background-color: #222;
-  color: #fff;
-  box-sizing: border-box;
-  margin-top: auto;
+    text-align: center;
+    padding: 1rem 0;
+    background-color: #222;
+    color: #fff;
+    box-sizing: border-box;
+    margin-top: auto;
 }

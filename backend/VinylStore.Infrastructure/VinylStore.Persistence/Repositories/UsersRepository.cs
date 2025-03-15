@@ -20,9 +20,14 @@ public class UsersRepository(VinylStoreDbContext context, IMapper mapper) : IUse
         return _mapper.Map<User>(user);
     }
 
-    public async Task CreateAsync(User user)
+    public async Task AddAsync(User user)
     {
+        var roleEntity = await _context.Roles
+                             .SingleOrDefaultAsync(r => r.Id == (int)Roles.User)
+                         ?? throw new InvalidOperationException();
+        
         var userEntity = _mapper.Map<UserEntity>(user);
+        userEntity.Roles.Add(roleEntity);
         await _context.Users
             .AddAsync(userEntity);
         await _context.SaveChangesAsync();
@@ -45,7 +50,7 @@ public class UsersRepository(VinylStoreDbContext context, IMapper mapper) : IUse
             .Where(u => u.Id == userId)
             .Select(u => u.Roles)
             .ToArrayAsync();
-            
+
         return roles
             .SelectMany(r => r)
             .SelectMany(r => r.Permissions)

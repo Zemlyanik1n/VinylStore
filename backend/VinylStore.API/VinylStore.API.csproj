@@ -11,23 +11,23 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="AutoMapper" Version="14.0.0" />
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.0"/>
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
-          <PrivateAssets>all</PrivateAssets>
-          <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        <PackageReference Include="AutoMapper" Version="14.0.0"/>
+        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.3">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.2.0" />
-        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.2.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="7.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="7.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="7.3.1" />
+        <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="7.3.1" />
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\VinylStore.Application\VinylStore.Application.csproj" />
-      <ProjectReference Include="..\VinylStore.Core\VinylStore.Core.csproj" />
-      <ProjectReference Include="..\VinylStore.Infrastructure\VinylStore.Infrastructure\VinylStore.Infrastructure.csproj" />
-      <ProjectReference Include="..\VinylStore.Infrastructure\VinylStore.Persistence\VinylStore.Persistence.csproj" />
+        <ProjectReference Include="..\VinylStore.Application\VinylStore.Application.csproj"/>
+        <ProjectReference Include="..\VinylStore.Core\VinylStore.Core.csproj"/>
+        <ProjectReference Include="..\VinylStore.Infrastructure\VinylStore.Infrastructure\VinylStore.Infrastructure.csproj"/>
+        <ProjectReference Include="..\VinylStore.Infrastructure\VinylStore.Persistence\VinylStore.Persistence.csproj"/>
     </ItemGroup>
 
 </Project>

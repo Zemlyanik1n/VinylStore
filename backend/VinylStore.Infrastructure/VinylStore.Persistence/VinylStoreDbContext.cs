@@ -6,6 +6,7 @@ using VinylStore.Persistence.Configurations;
 using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence;
+
 public class VinylStoreDbContext(IConfiguration configuration, IOptions<AuthorizationOptions> authOptions) : DbContext
 {
     private readonly IConfiguration _configuration = configuration;
@@ -20,6 +21,10 @@ public class VinylStoreDbContext(IConfiguration configuration, IOptions<Authoriz
     public DbSet<VinylPlateEntity> VinylPlates { get; set; }
     public DbSet<CartItemEntity> CartItems { get; set; }
     public DbSet<CartEntity> Carts { get; set; }
+
+    public DbSet<OrderItemEntity> OrderItems { get; set; }
+
+    public DbSet<RoleEntity> Roles { get; set; }
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {

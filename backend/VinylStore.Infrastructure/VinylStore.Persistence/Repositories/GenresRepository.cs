@@ -13,7 +13,7 @@ public class GenresRepository(VinylStoreDbContext context, IMapper mapper) : IGe
 
     public async Task<IEnumerable<Genre>> GetUnique()
     {
-        var result =  await _context.Genres
+        var result = await _context.Genres
             .AsNoTracking()
             .Distinct()
             .ToListAsync();

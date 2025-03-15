@@ -16,21 +16,24 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 
-builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(nameof(JwtOptions))); // дописать exts для токенов
-builder.Services.Configure<AuthorizationOptions>(builder.Configuration.GetSection(nameof(AuthorizationOptions))); // дописать exts для токенов
+builder.Services.Configure<JwtOptions>(
+    builder.Configuration.GetSection(nameof(JwtOptions))); // дописать exts для токенов
+builder.Services.Configure<AuthorizationOptions>(
+    builder.Configuration.GetSection(nameof(AuthorizationOptions))); // дописать exts для токенов
 
 builder.Services.AddPersistence(builder.Configuration); // бд
 builder.Services.AddApplication(); // сервисы
 builder.Services.AddAutoMapper(typeof(DataBaseMappings));
-builder.Services.AddSwaggerDocumentation(); 
+builder.Services.AddSwaggerDocumentation();
 builder.Services.AddApiAuthentication(builder.Configuration); // аутентификация
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>(); // дописать exts для токенов
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-
 
 
 var app = builder.Build();
@@ -47,10 +50,11 @@ app.UseCors(x =>
 app.Use(async (context, next) =>
 {
     var logger = context.RequestServices.GetRequiredService<ILogger<Program>>();
-    logger.LogInformation("Запрос: {Method} {Path} {QueryString}", context.Request.Method, context.Request.Path, context.Request.QueryString.Value);
-    
+    logger.LogInformation("Запрос: {Method} {Path} {QueryString}", context.Request.Method, context.Request.Path,
+        context.Request.QueryString.Value);
+
     await next();
-    
+
     logger.LogInformation("Ответ: {StatusCode}", context.Response.StatusCode);
 });
 

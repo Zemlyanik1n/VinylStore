@@ -19,7 +19,7 @@ public class UserConfiguration : IEntityTypeConfiguration<UserEntity>
 
         builder
             .HasMany(a => a.DeliveryAddresses)
-            .WithMany(d=> d.Users);
+            .WithMany(d => d.Users);
 
         builder
             .HasOne(u => u.Cart)

@@ -9,6 +9,5 @@ public class DeliveryAddressConfiguration : IEntityTypeConfiguration<DeliveryAdd
     public void Configure(EntityTypeBuilder<DeliveryAddressEntity> builder)
     {
         builder.HasKey(x => x.Id);
-        
     }
 }

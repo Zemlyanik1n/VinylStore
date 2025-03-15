@@ -14,9 +14,9 @@ public class TracksRepository(VinylStoreDbContext context, IMapper mapper) : ITr
 
     public async Task<IEnumerable<Track>> GetAll(CancellationToken ct)
     {
-        var result= await _context.Tracks
+        var result = await _context.Tracks
             .AsNoTracking()
-            .ToListAsync(ct); 
+            .ToListAsync(ct);
         return _mapper.Map<IEnumerable<Track>>(result);
     }
 
@@ -37,7 +37,6 @@ public class TracksRepository(VinylStoreDbContext context, IMapper mapper) : ITr
 
     public async Task Update(long id, Track track, CancellationToken ct)
     {
-        
     }
 
     public async Task Delete(long id, CancellationToken ct)

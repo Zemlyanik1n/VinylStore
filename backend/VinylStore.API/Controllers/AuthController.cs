@@ -10,7 +10,7 @@ namespace VinylStore.Controllers;
 public class AuthController(IAuthService authService) : ControllerBase
 {
     private readonly IAuthService _authService = authService;
-    
+
     [AllowAnonymous]
     [HttpPost("register")]
     public async Task<ActionResult> Register([FromBody] UserRegisterRequest registerRequest)
@@ -20,6 +20,7 @@ public class AuthController(IAuthService authService) : ControllerBase
         {
             return BadRequest(registerResult.Error);
         }
+
         return Ok();
     }
 
@@ -33,12 +34,12 @@ public class AuthController(IAuthService authService) : ControllerBase
     public async Task<ActionResult> Login([FromBody] UserLoginRequest loginRequest)
     {
         var token = await _authService.Login(loginRequest);
-        
-        if(token.IsFailure)
+
+        if (token.IsFailure)
             return BadRequest(token.Error);
-        
+
         HttpContext.Response.Cookies.Append("cookie", token.Value);
-        
+
         return Ok();
     }
 
@@ -49,6 +50,4 @@ public class AuthController(IAuthService authService) : ControllerBase
         HttpContext.Response.Cookies.Delete("cookie");
         return Ok();
     }
-
-
 }

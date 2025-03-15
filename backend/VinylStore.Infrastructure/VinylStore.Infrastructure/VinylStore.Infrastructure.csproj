@@ -7,13 +7,13 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="BCrypt.Net-Next" Version="4.0.3" />
-      <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3" />
+        <PackageReference Include="BCrypt.Net-Next" Version="4.0.3"/>
+        <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="9.0.3"/>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\VinylStore.Application\VinylStore.Application.csproj" />
-      <ProjectReference Include="..\..\VinylStore.Core\VinylStore.Core.csproj" />
+        <ProjectReference Include="..\..\VinylStore.Application\VinylStore.Application.csproj"/>
+        <ProjectReference Include="..\..\VinylStore.Core\VinylStore.Core.csproj"/>
     </ItemGroup>
 
 </Project>

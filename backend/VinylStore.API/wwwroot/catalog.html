@@ -229,8 +229,6 @@
                   </div>
                 </div>
         `).join('');
-
-                // Обработчик клика по подсказкам
                 document.querySelectorAll('.suggestion-item').forEach(item => {
                     item.addEventListener('click', () => {
                         window.location.href = `/vinyl.html?id=${item.dataset.id}`;
@@ -243,8 +241,7 @@
             }
         }, 300);
     });
-
-    // Скрываем подсказки при клике вне области
+    
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.search-container')) {
             document.getElementById('search-suggestions').classList.remove('visible');

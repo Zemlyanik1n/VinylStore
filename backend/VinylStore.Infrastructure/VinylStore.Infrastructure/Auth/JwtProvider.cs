@@ -15,7 +15,7 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
     public string GenerateToken(User user)
     {
         List<Claim> claims = [new(CustomClaims.UserId, user.Id.ToString())];
-        
+
         var signingCredentials = new SigningCredentials(
             new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_options.SecretKey)),
             SecurityAlgorithms.HmacSha256);
@@ -24,7 +24,7 @@ public class JwtProvider(IOptions<JwtOptions> options) : IJwtProvider
             signingCredentials: signingCredentials,
             claims: claims,
             expires: DateTime.UtcNow.AddHours(_options.ExpiresHours));
-        
+
         return new JwtSecurityTokenHandler().WriteToken(token);
     }
 }

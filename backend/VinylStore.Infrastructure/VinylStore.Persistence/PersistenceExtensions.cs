@@ -17,7 +17,7 @@ public static class PersistenceExtensions
         services.AddScoped<IAlbumsRepository, AlbumsRepository>();
         services.AddScoped<ITracksRepository, TracksRepository>();
         services.AddScoped<IGenresRepository, GenresRepository>();
-        //services.AddScoped<ICartRepository, CartRepository>();
+        services.AddScoped<ICartRepository, CartRepository>();
 
         return services;
     }

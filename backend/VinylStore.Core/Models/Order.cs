@@ -4,8 +4,8 @@ public class Order
 {
     private Order()
     {
-        
     }
+
     public long Id { get; set; }
     public DateTime DateOfOrder { get; }
     public DateTime DateOfDelivery { get; }
@@ -17,5 +17,4 @@ public class Order
     public ICollection<OrderItem> OrderItems { get; set; } = [];
     public DeliveryAddress? DeliveryAddress { get; set; }
     public long DeliveryAddressId { get; set; }
-
 }

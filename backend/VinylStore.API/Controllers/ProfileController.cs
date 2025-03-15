@@ -6,5 +6,4 @@ namespace VinylStore.Controllers;
 [Route("api/[controller]")]
 public class ProfileController : ControllerBase
 {
-    
 }

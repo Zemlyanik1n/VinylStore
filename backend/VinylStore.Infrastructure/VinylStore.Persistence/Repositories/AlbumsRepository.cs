@@ -10,13 +10,13 @@ public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper) : IAl
 {
     private readonly VinylStoreDbContext _context = context;
     private readonly IMapper _mapper = mapper;
-    
+
     public async Task<IEnumerable<Album>> GetAll(CancellationToken ct)
     {
-        var result =  await _context.Albums
+        var result = await _context.Albums
             .AsNoTracking()
             .ToListAsync(ct);
-        
+
         return _mapper.Map<IEnumerable<Album>>(result);
     }
 

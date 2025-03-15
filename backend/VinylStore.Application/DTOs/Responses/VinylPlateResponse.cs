@@ -19,13 +19,14 @@ public record AlbumResponse
     public long Id { get; set; }
     public string AlbumName { get; set; } = null!;
     public string ReleaseType { get; set; } = null!;
-    public string ArtistName { get; set; } = null!;      
+    public string ArtistName { get; set; } = null!;
     public string Description { get; set; } = null!;
     public int Duration { get; set; }
     public int ReleaseYear { get; set; }
     public List<string> Genres { get; set; } = [];
     public ICollection<TrackResponse> Tracks { get; set; } = [];
 }
+
 public record TrackResponse
 {
     public int DurationInSeconds { get; set; }

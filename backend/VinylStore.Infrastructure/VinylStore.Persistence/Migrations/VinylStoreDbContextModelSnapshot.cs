@@ -18,7 +18,7 @@ namespace VinylStore.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:Tablespace", "vinylstore")
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -241,7 +241,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("VinylPlateId");
 
-                    b.ToTable("OrderItemEntity");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("VinylStore.Persistence.Entities.PermissionEntity", b =>
@@ -297,7 +297,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleEntity");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new

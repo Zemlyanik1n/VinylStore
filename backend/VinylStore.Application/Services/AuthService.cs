@@ -16,14 +16,19 @@ public class AuthService(IPasswordHasher passwordHasher, IUsersRepository usersR
 
     public async Task<Result> Register(UserRegisterRequest registerRequest)
     {
+        var existingUser = await _usersRepository.GetByEmailAsync(registerRequest.Email);
+
+        if (existingUser != null)
+            return Result.Failure($"Email {registerRequest.Email} already exists");
+
         var hashedPassword = _passwordHasher.Generator(registerRequest.Password);
-        var user = User.Create(Guid.NewGuid(), registerRequest.Email, hashedPassword);
+        var user = User.CreateCustomer(Guid.NewGuid(), registerRequest.Email, hashedPassword);
         if (user.IsFailure)
         {
             return Result.Failure(user.Error);
         }
 
-        await _usersRepository.CreateAsync(user.Value);
+        await _usersRepository.AddAsync(user.Value);
         return Result.Success();
     }
 

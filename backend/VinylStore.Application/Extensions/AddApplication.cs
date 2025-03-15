@@ -9,9 +9,10 @@ public static class ApplicationExtensions
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
         services.AddScoped<IPermissionService, PermissionService>();
-        services.AddScoped<IVinylsService, VinylsService>(); 
+        services.AddScoped<IVinylsService, VinylsService>();
         services.AddScoped<IAuthService, AuthService>();
-        
+        services.AddScoped<ICartService, CartService>();
+
         return services;
     }
 }

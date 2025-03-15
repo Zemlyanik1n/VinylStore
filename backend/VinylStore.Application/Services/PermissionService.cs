@@ -4,8 +4,6 @@ using VinylStore.Core.Enums;
 
 namespace VinylStore.Application.Services;
 
-
-
 public class PermissionService(IUsersRepository usersRepository) : IPermissionService
 {
     public Task<HashSet<Permissions>> GetPermissionsAsync(Guid userId)
