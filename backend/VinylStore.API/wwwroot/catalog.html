@@ -71,6 +71,16 @@
     let isLoading = false;
     let hasMore = true;
 
+    function resetFilters() {
+        document.getElementById('header-search').value = '';
+        document.getElementById('genre').value = '';
+        document.getElementById('minPrice').value = '';
+        document.getElementById('maxPrice').value = '';
+        document.getElementById('year').value = '';
+        document.getElementById('releaseType').value = '';
+        document.getElementById('sortBy').value = 'year_desc';
+    }
+
     async function loadData(reset = false) {
         if (!navigator.onLine) {
             alert('Нет интернет-соединения. Проверьте подключение к сети.');
@@ -86,6 +96,7 @@
             document.getElementById('loadMore').disabled = true;
 
             if (reset) {
+                resetFilters();
                 currentPage = 1;
                 hasMore = true;
                 document.getElementById('vinyl-grid').innerHTML = '';
@@ -110,7 +121,7 @@
             const data = await response.json();
             hasMore = data.page < data.totalPages;
 
-            renderVinyls(data.items, reset);
+            await renderVinyls(data.items, reset);
             currentPage++;
 
         } catch (error) {
@@ -186,7 +197,6 @@
 
     // умный поиск
     let searchTimeout;
-
     document.getElementById('header-search').addEventListener('input', function(e) {
         const query = e.target.value.trim();
         const suggestionsContainer = document.getElementById('search-suggestions');
@@ -239,6 +249,7 @@
 
                 document.querySelectorAll('.suggestion-item').forEach(item => {
                     item.addEventListener('click', () => {
+                        resetFilters();
                         window.location.href = `/vinyl.html?id=${item.dataset.id}`;
                     });
                 });
@@ -249,17 +260,17 @@
             }
         }, 300);
     });
-    
+    // 
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.search-container')) {
             document.getElementById('search-suggestions').classList.remove('visible');
         }
     });
 
-    function renderVinyls(items, reset) {
+    async function renderVinyls(items, reset) {
         const grid = document.getElementById('vinyl-grid');
         if (reset) grid.innerHTML = '';
-
+        
         if (items.length === 0) {
             grid.innerHTML = '<p class="no-results">Ничего не найдено. Попробуйте изменить фильтры.</p>';
             return;
@@ -352,9 +363,9 @@
 
     document.addEventListener('DOMContentLoaded', async () => {
         await loadTemplates();
-        loadData(true);
+        await loadData(true);
         setActiveNavItem();
-        loadGenres();
+        await loadGenres();
         initHandlers();
     });
 </script>

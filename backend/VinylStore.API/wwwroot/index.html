@@ -202,7 +202,6 @@
             const modal = document.getElementById('profile-modal');
             if (e.target === modal || e.target.closest('#cancel-btn')) modal.style.display = 'none';
         });
-    }
 
         document.getElementById('logout-btn')?.addEventListener('click', () => {
             fetch("/api/auth/logout", {
