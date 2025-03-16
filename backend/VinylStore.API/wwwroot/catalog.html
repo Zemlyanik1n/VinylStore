@@ -4,22 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Каталог виниловых пластинок</title>
-    <link rel="stylesheet" href="styles/catalog.css">
+    <link rel="stylesheet" href="../styles/catalog.css"/>
+    <link rel="stylesheet" href="../styles/common.css"/>
 </head>
 <body>
-<header>
-    <div class="logo">Виниловый Магазин</div>
-    <nav>
-        <ul>
-            <li><a href="index.html">Главная</a></li>
-            <li><a href="catalog.html" class="active">Каталог</a></li>
-            <li><a href="cart.html">Корзина</a></li>
-            <li><a href="care.html">Уход за винилом</a></li>
-            <li><a href="add_vinyl.html">Добавить пластинку</a></li>
-            <li><a href="about.html">О нас</a></li>
-        </ul>
-    </nav>
-</header>
 
 <main>
     <div class="catalog-container">
@@ -33,23 +21,29 @@
         <aside class="filters-sidebar">
             <h2>Фильтры</h2>
             <div class="filter-group">
+                Поиск
                 <div class="search-container">
                     <input type="text" id="header-search" placeholder="Поиск альбомов и исполнителей...">
                     <div id="search-suggestions" class="search-suggestions"></div>
                 </div>
             </div>
+            Жанры
             <div class="filter-group">
                 <select id="genre">
                     <option value="">Все жанры</option>
                 </select>
             </div>
             <div class="filter-group">
+                Цена от
                 <input type="number" id="minPrice" placeholder="Цена от" min="0" step="1">
+                Цена до
                 <input type="number" id="maxPrice" placeholder="Цена до" min="0" step="1">
             </div>
             <div class="filter-group">
+                Год релиза
                 <input type="number" id="year" placeholder="Год релиза" min="1600" max="2025" step="1">
             </div>
+            Тип пластинки
             <div class="filter-group">
                 <select id="releaseType">
                     <option value="">Все типы</option>
@@ -58,22 +52,19 @@
                     <option value="Single">Сингл</option>
                 </select>
             </div>
+            Сортировать по...
             <div class="filter-group">
                 <select id="sortBy">
                     <option value="year_desc">Новые сначала</option>
                     <option value="year_asc">Старые сначала</option>
                     <option value="price_asc">Дешевые сначала</option>
                     <option value="price_desc">Дорогие сначала</option>
-                </select>
+                </select>   
             </div>
             <button class="apply-btn" onclick="loadData(true)">Применить</button>
         </aside>
     </div>
 </main>
-
-<footer>
-    <p>&copy; 2025 Виниловый Магазин. Все права защищены.</p>
-</footer>
 
 <script>
     let currentPage = 1;
@@ -196,11 +187,16 @@
     // умный поиск
     let searchTimeout;
 
-    document.getElementById('header-search').addEventListener('input', function (e) {
+    document.getElementById('header-search').addEventListener('input', function(e) {
         const query = e.target.value.trim();
         const suggestionsContainer = document.getElementById('search-suggestions');
+        const searchInput = e.target;
 
         clearTimeout(searchTimeout);
+
+        if (window.searchClickHandler) {
+            document.removeEventListener('click', window.searchClickHandler);
+        }
 
         if (query.length < 3) {
             suggestionsContainer.classList.remove('visible');
@@ -209,26 +205,38 @@
 
         suggestionsContainer.classList.add('visible');
 
+        window.searchClickHandler = function(event) {
+            const isClickInside = suggestionsContainer.contains(event.target);
+            const isClickOnInput = event.target === searchInput;
+
+            if (!isClickInside && !isClickOnInput) {
+                suggestionsContainer.classList.remove('visible');
+                document.removeEventListener('click', window.searchClickHandler);
+            }
+        };
+
+        document.addEventListener('click', window.searchClickHandler);
+
         searchTimeout = setTimeout(async () => {
             try {
                 const response = await fetch(`/api/vinyls/suggestions?query=${encodeURIComponent(query)}`);
                 const data = await response.json();
-                console.log(data)
 
                 suggestionsContainer.innerHTML = data.map(item => `
                 <div class="suggestion-item" data-id="${item.vinylPlateId}">
-                  <img src="${item.coverImageUrl}" alt="${item.albumName}" 
-                       onerror="this.src='default-image.jpg'">
-                  <div>
-                    <div>${item.albumName}</div>
-                    <small>${item.artistName}</small>
-                  </div>
-                  <div class="years-info">
-                    <div>${item.releaseYear}</div>
-                    <small>${item.printYear}</small>
-                  </div>
+                    <img src="${item.coverImageUrl}" alt="${item.albumName}" 
+                         onerror="this.src='default-image.jpg'">
+                    <div>
+                        <div>${item.albumName}</div>
+                        <small>${item.artistName}</small>
+                    </div>
+                    <div class="years-info">
+                        <div>${item.releaseYear}</div>
+                        <small>${item.printYear}</small>
+                    </div>
                 </div>
-        `).join('');
+            `).join('');
+
                 document.querySelectorAll('.suggestion-item').forEach(item => {
                     item.addEventListener('click', () => {
                         window.location.href = `/vinyl.html?id=${item.dataset.id}`;
@@ -262,14 +270,14 @@
       <img src="${item.coverUrl}" alt="${item.albumName}" onerror="this.src='default-image.jpg'">
       <div class="vinyl-info">
         <h3>${item.albumName}</h3>
-        <p>${item.artistName}</p>
+        <p class="artist-name">${item.artistName}</p>
         <p>${item.releaseYear} • ${item.releaseType}</p>
         <p>Состояние: ${item.condition}</p>
         <p>Год печати: ${item.printYear}</p>
         <p>Жанры: ${item.genres?.join(', ') || 'Не указано'}</p>
         <p class="price">${item.price.toFixed(2)} ₽</p>
-        <a href="/vinyl.html?id=${item.vinylPlateId}" class="details-btn">Подробнее</a>
       </div>
+              <a href="/vinyl.html?id=${item.vinylPlateId}" class="details-btn">Подробнее</a>
     </div>
   `).join(''));
     }
@@ -293,9 +301,61 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    function setActiveNavItem() {
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    }
+
+    async function loadTemplates() {
+        try {
+            const [header, footer, modal] = await Promise.all([
+                fetch('templates/header.html').then(r => r.text()),
+                fetch('templates/footer.html').then(r => r.text()),
+                fetch('templates/modal-profile.html').then(r => r.text())
+            ]);
+
+            document.body.insertAdjacentHTML('afterbegin', header);
+            document.body.insertAdjacentHTML('beforeend', footer);
+            document.body.insertAdjacentHTML('beforeend', modal);
+        } catch (error) {
+            console.error('Ошибка загрузки шаблонов:', error);
+        }
+    }
+
+    function initHandlers() {
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('#user-icon-link')) {
+                e.preventDefault();
+                try {
+                    const response = await fetch("/api/auth/me", {credentials: "include"});
+                    response.ok ? document.getElementById('profile-modal').style.display = 'block' : window.location.href = 'login.html';
+                } catch {
+                    window.location.href = 'login.html';
+                }
+            }
+        });
+
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            fetch("/api/auth/logout", {method: "POST", credentials: "include"})
+                .finally(() => window.location.href = 'index.html');
+        });
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('profile-modal');
+            if (e.target === modal || e.target.closest('#cancel-btn')) modal.style.display = 'none';
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+        await loadTemplates();
         loadData(true);
+        setActiveNavItem();
         loadGenres();
+        initHandlers();
     });
 </script>
 </body>

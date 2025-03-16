@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using VinylStore.Application.Abstractions.Auth;
 using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
 
@@ -7,9 +8,23 @@ namespace VinylStore.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class AuthController(IAuthService authService) : ControllerBase
+public class AuthController(IAuthService authService, ICurrentUserService currentUserService) : ControllerBase
 {
     private readonly IAuthService _authService = authService;
+    private readonly ICurrentUserService _currentUserService = currentUserService;
+
+    [Authorize]
+    [HttpGet("me")]
+    public async Task<IActionResult> GetMe()
+    {
+        var meResult = await _authService.GetMe();
+        
+        if(meResult.IsFailure)
+            return BadRequest(meResult.Error);
+        
+        return Ok(meResult.Value);
+    }
+
 
     [AllowAnonymous]
     [HttpPost("register")]

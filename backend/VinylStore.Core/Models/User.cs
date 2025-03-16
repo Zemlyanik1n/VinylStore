@@ -9,7 +9,7 @@ public class User
 {
     public const int MIN_PASSWORD_LENGTH = 8;
 
-    public Guid Id { get; }
+    public Guid Id { get; init; }
     public string Email { get; init; }
     public string? PhoneNumber { get; private set; }
     public string? FirstName { get; private set; }

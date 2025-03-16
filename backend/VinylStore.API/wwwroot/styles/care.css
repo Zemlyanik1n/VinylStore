@@ -10,47 +10,10 @@ body {
     min-height: 100vh;
 }
 
-header {
-    background-color: #222;
-    color: #fff;
-    padding: 1rem 0;
-    text-align: center;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-header .logo {
-    font-size: 2rem;
-}
-
-nav ul {
-    display: flex;
-    list-style: none;
-    justify-content: center;
-    padding: 0;
-    margin: 0;
-}
-
-nav ul li {
-    margin: 0 15px;
-}
-
-nav ul li a {
-    color: #fff;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-}
-
-nav ul li a:hover,
-nav ul li a.active {
-    color: #ff9800;
-}
-
 main {
+    padding: 2rem;
     max-width: 1200px;
-    margin: 20px auto;
-    padding: 0 15px;
-    box-sizing: border-box;
+    margin: 0 auto;
 }
 
 h1 {
@@ -72,15 +35,6 @@ p {
     text-align: justify;
 }
 
-footer {
-    text-align: center;
-    padding: 1rem 0;
-    background-color: #222;
-    color: #fff;
-    box-sizing: border-box;
-    margin-top: auto;
-}
-
 .care-content {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -99,13 +53,3 @@ footer {
     padding-bottom: 5px;
 }
 
-footer {
-    width: 100%;
-    text-align: center;
-    padding: 1rem 0;
-    background-color: #222;
-    color: #fff;
-    box-sizing: border-box;
-    margin-top: auto;
-    position: relative;
-}

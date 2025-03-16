@@ -1,35 +1,16 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <meta
-            name="description"
-            content="На сайте нашего магазина вы найдете широкий ассортимент виниловых пластинок от классики до современных альбомов."
-    />
-    <meta
-            name="keywords"
-            content="виниловые пластинки, купить винил, редкие издания, музыка, джаз, рок, коллекция винила"
-    />
-    <meta name="author" content="Виниловый Магазин"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="На сайте нашего магазина вы найдете широкий ассортимент виниловых пластинок от классики до современных альбомов.">
+    <meta name="keywords" content="виниловые пластинки, купить винил, редкие издания, музыка, джаз, рок, коллекция винила">
+    <meta name="author" content="Виниловый Магазин">
     <title>Виниловый Магазин - Купить виниловые пластинки онлайн</title>
-    <link rel="stylesheet" href="../styles/index.css"/>
+    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../styles/index.css">
 </head>
-
 <body>
-<header>
-    <div class="logo">Виниловый Магазин</div>
-    <nav>
-        <ul>
-            <li><a href="index.html" class="active">Главная</a></li>
-            <li><a href="catalog.html">Каталог</a></li>
-            <li><a href="cart.html">Корзина</a></li>
-            <li><a href="care.html">Уход за винилом</a></li>
-            <li><a href="add_vinyl.html">Добавить пластинку</a></li>
-            <li><a href="about.html">О нас</a></li>
-        </ul>
-    </nav>
-</header>
 
 <main>
     <div class="intro">
@@ -182,30 +163,79 @@
     </div>
 </main>
 
-<footer>
-    <p>&copy; 2025 Виниловый Магазин. Все права защищены.</p>
-</footer>
-
 <script>
-    const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+    async function loadTemplates() {
+        try {
+            const [header, footer, modal] = await Promise.all([
+                fetch('templates/header.html').then(r => r.text()),
+                fetch('templates/footer.html').then(r => r.text()),
+                fetch('templates/modal-profile.html').then(r => r.text())
+            ]);
 
-    window.onscroll = function () {
-        if (
-            document.body.scrollTop > 10 ||
-            document.documentElement.scrollTop > 10
-        ) {
-            scrollToTopBtn.style.display = "block";
-        } else {
-            scrollToTopBtn.style.display = "none";
+            document.body.insertAdjacentHTML('afterbegin', header);
+            document.body.insertAdjacentHTML('beforeend', footer);
+            document.body.insertAdjacentHTML('beforeend', modal);
+        } catch (error) {
+            console.error('Ошибка загрузки шаблонов:', error);
         }
-    };
+    }
 
-    scrollToTopBtn.addEventListener("click", function () {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth",
+    function initEventHandlers() {
+        document.addEventListener('click', async (e) => {
+            if (e.target.closest('#user-icon-link')) {
+                e.preventDefault();
+                try {
+                    const response = await fetch("/api/auth/me", {credentials: "include"});
+                    response.ok ? document.getElementById('profile-modal').style.display = 'block' : window.location.href = 'login.html';
+                } catch {
+                    window.location.href = 'login.html';
+                }
+            }
         });
+
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            fetch("/api/auth/logout", {method: "POST", credentials: "include"})
+                .finally(() => window.location.href = 'index.html');
+        });
+
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('profile-modal');
+            if (e.target === modal || e.target.closest('#cancel-btn')) modal.style.display = 'none';
+        });
+    }
+
+        document.getElementById('logout-btn')?.addEventListener('click', () => {
+            fetch("/api/auth/logout", {
+                method: "POST",
+                credentials: "include"
+            }).then(() => {
+                window.location.href = 'index.html';
+            });
+        });
+        
+        document.addEventListener('click', (e) => {
+            const modal = document.getElementById('profile-modal');
+            if (e.target === modal || e.target.closest('#cancel-btn')) {
+                modal.style.display = 'none';
+            }
+        });
+    }
+
+
+    function setActiveNavItem() {
+        const currentPage = window.location.pathname.split('/').pop();
+        document.querySelectorAll('nav a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+    }
+    window.addEventListener('DOMContentLoaded', async () => {
+        await loadTemplates();
+        setActiveNavItem();
+        initEventHandlers();
     });
 </script>
+
 </body>
 </html>
