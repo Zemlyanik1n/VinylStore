@@ -26,5 +26,11 @@ public class AlbumConfiguration : IEntityTypeConfiguration<AlbumEntity>
             .HasMany(t => t.Tracks)
             .WithOne(t => t.Album)
             .HasForeignKey(t => t.AlbumId);
+
+        builder.HasMany(a => a.Genres)
+            .WithMany(g => g.Albums)
+            .UsingEntity<AlbumEntityGenreEntity>(
+                l => l.HasOne<GenreEntity>().WithMany().HasForeignKey(g => g.GenreId),
+                r => r.HasOne<AlbumEntity>().WithMany().HasForeignKey(a => a.AlbumId));
     }
 }

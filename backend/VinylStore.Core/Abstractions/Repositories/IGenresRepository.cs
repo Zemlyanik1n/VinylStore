@@ -5,9 +5,10 @@ namespace VinylStore.Core.Abstractions.Repositories;
 public interface IGenresRepository
 {
     Task<IEnumerable<Genre>> GetUnique();
-    Task<IEnumerable<Genre>> GetAll(CancellationToken ct);
-    Task<Genre?> GetById(long id, CancellationToken ct);
-    Task Create(Genre genre, CancellationToken ct);
-    Task Update(long id, Genre genre, CancellationToken ct);
-    Task Delete(long id, CancellationToken ct);
+    Task<IEnumerable<Genre>> GetAll();
+    Task<Genre?> GetById(long id);
+    Task Create(Genre genre);
+    Task Update(Genre genre);
+    Task Delete(long id);
+    Task<IEnumerable<Genre>> GetByNames(IEnumerable<string?> names);
 }

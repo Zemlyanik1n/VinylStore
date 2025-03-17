@@ -4,6 +4,7 @@ using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.DTOs.Responses;
 using VinylStore.Core.Abstractions.Repositories;
+using VinylStore.Core.Enums;
 using VinylStore.Core.Models;
 
 namespace VinylStore.Application.Services;
@@ -28,11 +29,14 @@ public class AuthService(IPasswordHasher passwordHasher, IUsersRepository usersR
         if(userInfo is null)
             return Result.Failure<UserInfoResponse>("User does not exist");
         
+        var permissions = (await _usersRepository.GetUserPermissions(userInfo.Id)).ToList();
+        
         var result = new UserInfoResponse
         {
             Email = userInfo.Email,
             FirstName = userInfo.FirstName ?? "",
             LastName = userInfo.LastName ?? "",
+            Role = permissions.Contains(Permissions.CreateVinyls) ? "Admin" : "User"
         };
         
         return Result.Success(result);

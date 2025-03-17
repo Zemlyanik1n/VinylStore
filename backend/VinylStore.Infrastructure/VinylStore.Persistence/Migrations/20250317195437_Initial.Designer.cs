@@ -12,8 +12,8 @@ using VinylStore.Persistence;
 namespace VinylStore.Persistence.Migrations
 {
     [DbContext(typeof(VinylStoreDbContext))]
-    [Migration("20250313162112_changed user again")]
-    partial class changeduseragain
+    [Migration("20250317195437_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,42 +21,27 @@ namespace VinylStore.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:Tablespace", "vinylstore")
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("AlbumGenre", b =>
-                {
-                    b.Property<long>("AlbumId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("GenresId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("AlbumId", "GenresId");
-
-                    b.HasIndex("GenresId");
-
-                    b.ToTable("AlbumGenre");
-                });
-
-            modelBuilder.Entity("DeliveryAddressUser", b =>
+            modelBuilder.Entity("DeliveryAddressEntityUserEntity", b =>
                 {
                     b.Property<long>("DeliveryAddressesId")
                         .HasColumnType("bigint");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("UsersId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("DeliveryAddressesId", "UserId");
+                    b.HasKey("DeliveryAddressesId", "UsersId");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("UsersId");
 
-                    b.ToTable("DeliveryAddressUser");
+                    b.ToTable("DeliveryAddressEntityUserEntity");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Album", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -91,7 +76,32 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Albums");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Cart", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntityGenreEntity", b =>
+                {
+                    b.Property<long>("AlbumId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("GenreId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("AlbumId1")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("GenreId1")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("AlbumId", "GenreId");
+
+                    b.HasIndex("AlbumId1");
+
+                    b.HasIndex("GenreId");
+
+                    b.HasIndex("GenreId1");
+
+                    b.ToTable("AlbumEntityGenreEntity");
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.CartEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -110,7 +120,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Carts");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.CartItem", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.CartItemEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -136,7 +146,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("CartItems");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.DeliveryAddress", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.DeliveryAddressEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -174,7 +184,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("DeliveryAddresses");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Genre", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.GenreEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -191,7 +201,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Genres");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Order", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.OrderEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -221,7 +231,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Orders");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.OrderItem", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.OrderItemEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -244,10 +254,130 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("VinylPlateId");
 
-                    b.ToTable("OrderItem");
+                    b.ToTable("OrderItems");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Track", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.PermissionEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("PermissionEntity");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "ReadVinyls"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "CreateVinyls"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "UpdateVinyls"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "DeleteVinyls"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ReadAlbums"
+                        });
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.RoleEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Roles");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Admin"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "User"
+                        });
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.RolePermissionEntity", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PermissionId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("RoleId", "PermissionId");
+
+                    b.HasIndex("PermissionId");
+
+                    b.ToTable("RolePermissionEntity");
+
+                    b.HasData(
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 2
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 1
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 3
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 5
+                        },
+                        new
+                        {
+                            RoleId = 2,
+                            PermissionId = 1
+                        });
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.TrackEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -275,7 +405,7 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Tracks");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.User", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.UserEntity", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,6 +413,10 @@ namespace VinylStore.Persistence.Migrations
 
                     b.Property<long?>("CartId")
                         .HasColumnType("bigint");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("FirstName")
                         .HasColumnType("text");
@@ -302,7 +436,22 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.VinylPlate", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.UserRoleEntity", b =>
+                {
+                    b.Property<int>("RoleId")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("RoleId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserRoleEntity");
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.VinylPlateEntity", b =>
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
@@ -344,56 +493,72 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("VinylPlates");
                 });
 
-            modelBuilder.Entity("AlbumGenre", b =>
+            modelBuilder.Entity("DeliveryAddressEntityUserEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.Album", null)
-                        .WithMany()
-                        .HasForeignKey("AlbumId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VinylStore.Core.Models.Genre", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("DeliveryAddressUser", b =>
-                {
-                    b.HasOne("VinylStore.Core.Models.DeliveryAddress", null)
+                    b.HasOne("VinylStore.Persistence.Entities.DeliveryAddressEntity", null)
                         .WithMany()
                         .HasForeignKey("DeliveryAddressesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VinylStore.Core.Models.User", null)
+                    b.HasOne("VinylStore.Persistence.Entities.UserEntity", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("UsersId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Cart", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntityGenreEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.User", "User")
+                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", null)
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", "Album")
+                        .WithMany()
+                        .HasForeignKey("AlbumId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.GenreEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GenreId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.GenreEntity", "Genre")
+                        .WithMany()
+                        .HasForeignKey("GenreId1")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Album");
+
+                    b.Navigation("Genre");
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.CartEntity", b =>
+                {
+                    b.HasOne("VinylStore.Persistence.Entities.UserEntity", "User")
                         .WithOne("Cart")
-                        .HasForeignKey("VinylStore.Core.Models.Cart", "UserId")
+                        .HasForeignKey("VinylStore.Persistence.Entities.CartEntity", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.CartItem", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.CartItemEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.Cart", "Cart")
+                    b.HasOne("VinylStore.Persistence.Entities.CartEntity", "Cart")
                         .WithMany("CartItems")
                         .HasForeignKey("CartId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VinylStore.Core.Models.VinylPlate", "VinylPlate")
+                    b.HasOne("VinylStore.Persistence.Entities.VinylPlateEntity", "VinylPlate")
                         .WithMany()
                         .HasForeignKey("VinylPlateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -404,15 +569,15 @@ namespace VinylStore.Persistence.Migrations
                     b.Navigation("VinylPlate");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Order", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.OrderEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.DeliveryAddress", "DeliveryAddress")
+                    b.HasOne("VinylStore.Persistence.Entities.DeliveryAddressEntity", "DeliveryAddress")
                         .WithMany()
                         .HasForeignKey("DeliveryAddressId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VinylStore.Core.Models.User", "User")
+                    b.HasOne("VinylStore.Persistence.Entities.UserEntity", "User")
                         .WithMany("Orders")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -423,15 +588,15 @@ namespace VinylStore.Persistence.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.OrderItem", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.OrderItemEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.Order", "Order")
+                    b.HasOne("VinylStore.Persistence.Entities.OrderEntity", "Order")
                         .WithMany("OrderItems")
                         .HasForeignKey("OrderId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("VinylStore.Core.Models.VinylPlate", "VinylPlate")
+                    b.HasOne("VinylStore.Persistence.Entities.VinylPlateEntity", "VinylPlate")
                         .WithMany()
                         .HasForeignKey("VinylPlateId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -442,9 +607,24 @@ namespace VinylStore.Persistence.Migrations
                     b.Navigation("VinylPlate");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Track", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.RolePermissionEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.Album", "Album")
+                    b.HasOne("VinylStore.Persistence.Entities.PermissionEntity", null)
+                        .WithMany()
+                        .HasForeignKey("PermissionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.RoleEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.TrackEntity", b =>
+                {
+                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", "Album")
                         .WithMany("Tracks")
                         .HasForeignKey("AlbumId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -453,9 +633,24 @@ namespace VinylStore.Persistence.Migrations
                     b.Navigation("Album");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.VinylPlate", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.UserRoleEntity", b =>
                 {
-                    b.HasOne("VinylStore.Core.Models.Album", "Album")
+                    b.HasOne("VinylStore.Persistence.Entities.RoleEntity", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.UserEntity", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.VinylPlateEntity", b =>
+                {
+                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", "Album")
                         .WithMany("VinylPlates")
                         .HasForeignKey("AlbumId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -464,24 +659,24 @@ namespace VinylStore.Persistence.Migrations
                     b.Navigation("Album");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Album", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntity", b =>
                 {
                     b.Navigation("Tracks");
 
                     b.Navigation("VinylPlates");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Cart", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.CartEntity", b =>
                 {
                     b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.Order", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.OrderEntity", b =>
                 {
                     b.Navigation("OrderItems");
                 });
 
-            modelBuilder.Entity("VinylStore.Core.Models.User", b =>
+            modelBuilder.Entity("VinylStore.Persistence.Entities.UserEntity", b =>
                 {
                     b.Navigation("Cart");
 

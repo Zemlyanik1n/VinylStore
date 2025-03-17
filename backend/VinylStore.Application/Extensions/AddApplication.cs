@@ -12,6 +12,7 @@ public static class ApplicationExtensions
         services.AddScoped<IVinylsService, VinylsService>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<ICartService, CartService>();
+        services.AddScoped<IAlbumService, AlbumService>();
 
         return services;
     }

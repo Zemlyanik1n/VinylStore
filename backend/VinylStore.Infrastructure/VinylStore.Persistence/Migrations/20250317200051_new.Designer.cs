@@ -12,8 +12,8 @@ using VinylStore.Persistence;
 namespace VinylStore.Persistence.Migrations
 {
     [DbContext(typeof(VinylStoreDbContext))]
-    [Migration("20250314133529_add permissions into dv")]
-    partial class addpermissionsintodv
+    [Migration("20250317200051_new")]
+    partial class @new
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,25 +21,10 @@ namespace VinylStore.Persistence.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("Npgsql:Tablespace", "vinylstore")
-                .HasAnnotation("ProductVersion", "9.0.0")
+                .HasAnnotation("ProductVersion", "9.0.3")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
-
-            modelBuilder.Entity("AlbumEntityGenreEntity", b =>
-                {
-                    b.Property<long>("AlbumsId")
-                        .HasColumnType("bigint");
-
-                    b.Property<long>("GenresId")
-                        .HasColumnType("bigint");
-
-                    b.HasKey("AlbumsId", "GenresId");
-
-                    b.HasIndex("GenresId");
-
-                    b.ToTable("AlbumEntityGenreEntity");
-                });
 
             modelBuilder.Entity("DeliveryAddressEntityUserEntity", b =>
                 {
@@ -89,6 +74,21 @@ namespace VinylStore.Persistence.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Albums");
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntityGenreEntity", b =>
+                {
+                    b.Property<long>("AlbumId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("GenreId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("AlbumId", "GenreId");
+
+                    b.HasIndex("GenreId");
+
+                    b.ToTable("AlbumEntityGenreEntity");
                 });
 
             modelBuilder.Entity("VinylStore.Persistence.Entities.CartEntity", b =>
@@ -244,7 +244,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasIndex("VinylPlateId");
 
-                    b.ToTable("OrderItemEntity");
+                    b.ToTable("OrderItems");
                 });
 
             modelBuilder.Entity("VinylStore.Persistence.Entities.PermissionEntity", b =>
@@ -267,22 +267,27 @@ namespace VinylStore.Persistence.Migrations
                         new
                         {
                             Id = 1,
-                            Name = "Read"
+                            Name = "ReadVinyls"
                         },
                         new
                         {
                             Id = 2,
-                            Name = "Create"
+                            Name = "CreateVinyls"
                         },
                         new
                         {
                             Id = 3,
-                            Name = "Update"
+                            Name = "UpdateVinyls"
                         },
                         new
                         {
                             Id = 4,
-                            Name = "Delete"
+                            Name = "DeleteVinyls"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "ReadAlbums"
                         });
                 });
 
@@ -300,7 +305,7 @@ namespace VinylStore.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoleEntity");
+                    b.ToTable("Roles");
 
                     b.HasData(
                         new
@@ -349,6 +354,11 @@ namespace VinylStore.Persistence.Migrations
                         {
                             RoleId = 1,
                             PermissionId = 4
+                        },
+                        new
+                        {
+                            RoleId = 1,
+                            PermissionId = 5
                         },
                         new
                         {
@@ -473,21 +483,6 @@ namespace VinylStore.Persistence.Migrations
                     b.ToTable("VinylPlates");
                 });
 
-            modelBuilder.Entity("AlbumEntityGenreEntity", b =>
-                {
-                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", null)
-                        .WithMany()
-                        .HasForeignKey("AlbumsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("VinylStore.Persistence.Entities.GenreEntity", null)
-                        .WithMany()
-                        .HasForeignKey("GenresId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
             modelBuilder.Entity("DeliveryAddressEntityUserEntity", b =>
                 {
                     b.HasOne("VinylStore.Persistence.Entities.DeliveryAddressEntity", null)
@@ -499,6 +494,21 @@ namespace VinylStore.Persistence.Migrations
                     b.HasOne("VinylStore.Persistence.Entities.UserEntity", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("VinylStore.Persistence.Entities.AlbumEntityGenreEntity", b =>
+                {
+                    b.HasOne("VinylStore.Persistence.Entities.AlbumEntity", null)
+                        .WithMany()
+                        .HasForeignKey("AlbumId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("VinylStore.Persistence.Entities.GenreEntity", null)
+                        .WithMany()
+                        .HasForeignKey("GenreId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

@@ -6,4 +6,5 @@ public enum Permissions
     CreateVinyls = 2,
     UpdateVinyls = 3,
     DeleteVinyls = 4,
+    ReadAlbums = 5,
 }

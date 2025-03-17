@@ -45,7 +45,7 @@ public class User
         return Result.Success(user);
     }
     
-    public static Result Validate(string email, string hashedPassword)
+    private static Result Validate(string email, string hashedPassword)
     {
         if (string.IsNullOrWhiteSpace(email))
             return Result.Failure("Email is required");

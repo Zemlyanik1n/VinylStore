@@ -4,6 +4,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace VinylStore.Persistence.Migrations
 {
     /// <inheritdoc />
@@ -63,17 +65,42 @@ namespace VinylStore.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "PermissionEntity",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PermissionEntity", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Roles",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "text", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Roles", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Users",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Login = table.Column<string>(type: "text", nullable: false),
                     Email = table.Column<string>(type: "text", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "text", nullable: false),
-                    FirstName = table.Column<string>(type: "text", nullable: false),
-                    LastName = table.Column<string>(type: "text", nullable: false),
+                    PhoneNumber = table.Column<string>(type: "text", nullable: true),
+                    FirstName = table.Column<string>(type: "text", nullable: true),
+                    LastName = table.Column<string>(type: "text", nullable: true),
                     Password = table.Column<string>(type: "text", nullable: false),
-                    CartId = table.Column<long>(type: "bigint", nullable: false)
+                    CartId = table.Column<long>(type: "bigint", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -129,25 +156,63 @@ namespace VinylStore.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AlbumGenre",
+                name: "AlbumEntityGenreEntity",
                 columns: table => new
                 {
                     AlbumId = table.Column<long>(type: "bigint", nullable: false),
-                    GenresId = table.Column<long>(type: "bigint", nullable: false)
+                    GenreId = table.Column<long>(type: "bigint", nullable: false),
+                    AlbumId1 = table.Column<long>(type: "bigint", nullable: false),
+                    GenreId1 = table.Column<long>(type: "bigint", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AlbumGenre", x => new { x.AlbumId, x.GenresId });
+                    table.PrimaryKey("PK_AlbumEntityGenreEntity", x => new { x.AlbumId, x.GenreId });
                     table.ForeignKey(
-                        name: "FK_AlbumGenre_Albums_AlbumId",
+                        name: "FK_AlbumEntityGenreEntity_Albums_AlbumId",
                         column: x => x.AlbumId,
                         principalTable: "Albums",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_AlbumGenre_Genres_GenresId",
-                        column: x => x.GenresId,
+                        name: "FK_AlbumEntityGenreEntity_Albums_AlbumId1",
+                        column: x => x.AlbumId1,
+                        principalTable: "Albums",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AlbumEntityGenreEntity_Genres_GenreId",
+                        column: x => x.GenreId,
                         principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_AlbumEntityGenreEntity_Genres_GenreId1",
+                        column: x => x.GenreId1,
+                        principalTable: "Genres",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "RolePermissionEntity",
+                columns: table => new
+                {
+                    RoleId = table.Column<int>(type: "integer", nullable: false),
+                    PermissionId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RolePermissionEntity", x => new { x.RoleId, x.PermissionId });
+                    table.ForeignKey(
+                        name: "FK_RolePermissionEntity_PermissionEntity_PermissionId",
+                        column: x => x.PermissionId,
+                        principalTable: "PermissionEntity",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_RolePermissionEntity_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -172,24 +237,24 @@ namespace VinylStore.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DeliveryAddressUser",
+                name: "DeliveryAddressEntityUserEntity",
                 columns: table => new
                 {
                     DeliveryAddressesId = table.Column<long>(type: "bigint", nullable: false),
-                    UserId = table.Column<Guid>(type: "uuid", nullable: false)
+                    UsersId = table.Column<Guid>(type: "uuid", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DeliveryAddressUser", x => new { x.DeliveryAddressesId, x.UserId });
+                    table.PrimaryKey("PK_DeliveryAddressEntityUserEntity", x => new { x.DeliveryAddressesId, x.UsersId });
                     table.ForeignKey(
-                        name: "FK_DeliveryAddressUser_DeliveryAddresses_DeliveryAddressesId",
+                        name: "FK_DeliveryAddressEntityUserEntity_DeliveryAddresses_DeliveryA~",
                         column: x => x.DeliveryAddressesId,
                         principalTable: "DeliveryAddresses",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_DeliveryAddressUser_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_DeliveryAddressEntityUserEntity_Users_UsersId",
+                        column: x => x.UsersId,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -224,6 +289,30 @@ namespace VinylStore.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRoleEntity",
+                columns: table => new
+                {
+                    UserId = table.Column<Guid>(type: "uuid", nullable: false),
+                    RoleId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRoleEntity", x => new { x.RoleId, x.UserId });
+                    table.ForeignKey(
+                        name: "FK_UserRoleEntity_Roles_RoleId",
+                        column: x => x.RoleId,
+                        principalTable: "Roles",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_UserRoleEntity_Users_UserId",
+                        column: x => x.UserId,
+                        principalTable: "Users",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "CartItems",
                 columns: table => new
                 {
@@ -251,7 +340,7 @@ namespace VinylStore.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "OrderItem",
+                name: "OrderItems",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "bigint", nullable: false)
@@ -262,25 +351,69 @@ namespace VinylStore.Persistence.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderItem", x => x.Id);
+                    table.PrimaryKey("PK_OrderItems", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_OrderItem_Orders_OrderId",
+                        name: "FK_OrderItems_Orders_OrderId",
                         column: x => x.OrderId,
                         principalTable: "Orders",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_OrderItem_VinylPlates_VinylPlateId",
+                        name: "FK_OrderItems_VinylPlates_VinylPlateId",
                         column: x => x.VinylPlateId,
                         principalTable: "VinylPlates",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "PermissionEntity",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "ReadVinyls" },
+                    { 2, "CreateVinyls" },
+                    { 3, "UpdateVinyls" },
+                    { 4, "DeleteVinyls" },
+                    { 5, "ReadAlbums" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Roles",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Admin" },
+                    { 2, "User" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RolePermissionEntity",
+                columns: new[] { "PermissionId", "RoleId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 2, 1 },
+                    { 3, 1 },
+                    { 4, 1 },
+                    { 5, 1 },
+                    { 1, 2 }
+                });
+
             migrationBuilder.CreateIndex(
-                name: "IX_AlbumGenre_GenresId",
-                table: "AlbumGenre",
-                column: "GenresId");
+                name: "IX_AlbumEntityGenreEntity_AlbumId1",
+                table: "AlbumEntityGenreEntity",
+                column: "AlbumId1");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlbumEntityGenreEntity_GenreId",
+                table: "AlbumEntityGenreEntity",
+                column: "GenreId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AlbumEntityGenreEntity_GenreId1",
+                table: "AlbumEntityGenreEntity",
+                column: "GenreId1");
 
             migrationBuilder.CreateIndex(
                 name: "IX_CartItems_CartId",
@@ -299,18 +432,18 @@ namespace VinylStore.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_DeliveryAddressUser_UserId",
-                table: "DeliveryAddressUser",
-                column: "UserId");
+                name: "IX_DeliveryAddressEntityUserEntity_UsersId",
+                table: "DeliveryAddressEntityUserEntity",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_OrderId",
-                table: "OrderItem",
+                name: "IX_OrderItems_OrderId",
+                table: "OrderItems",
                 column: "OrderId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_OrderItem_VinylPlateId",
-                table: "OrderItem",
+                name: "IX_OrderItems_VinylPlateId",
+                table: "OrderItems",
                 column: "VinylPlateId");
 
             migrationBuilder.CreateIndex(
@@ -324,9 +457,19 @@ namespace VinylStore.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RolePermissionEntity_PermissionId",
+                table: "RolePermissionEntity",
+                column: "PermissionId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tracks_AlbumId",
                 table: "Tracks",
                 column: "AlbumId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRoleEntity_UserId",
+                table: "UserRoleEntity",
+                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_VinylPlates_AlbumId",
@@ -338,19 +481,25 @@ namespace VinylStore.Persistence.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AlbumGenre");
+                name: "AlbumEntityGenreEntity");
 
             migrationBuilder.DropTable(
                 name: "CartItems");
 
             migrationBuilder.DropTable(
-                name: "DeliveryAddressUser");
+                name: "DeliveryAddressEntityUserEntity");
 
             migrationBuilder.DropTable(
-                name: "OrderItem");
+                name: "OrderItems");
+
+            migrationBuilder.DropTable(
+                name: "RolePermissionEntity");
 
             migrationBuilder.DropTable(
                 name: "Tracks");
+
+            migrationBuilder.DropTable(
+                name: "UserRoleEntity");
 
             migrationBuilder.DropTable(
                 name: "Genres");
@@ -363,6 +512,12 @@ namespace VinylStore.Persistence.Migrations
 
             migrationBuilder.DropTable(
                 name: "VinylPlates");
+
+            migrationBuilder.DropTable(
+                name: "PermissionEntity");
+
+            migrationBuilder.DropTable(
+                name: "Roles");
 
             migrationBuilder.DropTable(
                 name: "DeliveryAddresses");

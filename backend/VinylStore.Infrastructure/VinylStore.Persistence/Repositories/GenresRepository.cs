@@ -1,3 +1,4 @@
+using System.Collections;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using VinylStore.Core.Abstractions.Repositories;
@@ -20,38 +21,59 @@ public class GenresRepository(VinylStoreDbContext context, IMapper mapper) : IGe
         return _mapper.Map<IEnumerable<Genre>>(result);
     }
 
-    public async Task<IEnumerable<Genre>> GetAll(CancellationToken ct)
+    public async Task<IEnumerable<Genre>> GetAll()
     {
         var result = await _context.Genres
             .AsNoTracking()
-            .ToListAsync(ct);
+            .ToListAsync();
         return _mapper.Map<IEnumerable<Genre>>(result);
     }
 
-    public async Task<Genre?> GetById(long id, CancellationToken ct)
+    public async Task<Genre?> GetById(long id)
     {
         var result = await _context.Genres
             .AsNoTracking()
-            .FirstOrDefaultAsync(g => g.Id == id, ct);
+            .FirstOrDefaultAsync(g => g.Id == id);
         return _mapper.Map<Genre>(result);
     }
 
-    public async Task Create(Genre genre, CancellationToken ct)
+    public async Task Create(Genre genre)
     {
         var genreEntity = _mapper.Map<GenreEntity>(genre);
-        await _context.Genres.AddAsync(genreEntity, ct);
-        await _context.SaveChangesAsync(ct);
+        await _context.Genres.AddAsync(genreEntity);
+        await _context.SaveChangesAsync();
     }
 
-    public Task Update(long id, Genre genre, CancellationToken ct)
+    public Task Update(Genre genre)
     {
-        throw new NotImplementedException();
+        var genreEntity = _mapper.Map<GenreEntity>(genre);
+        _context.Genres.Update(genreEntity);
+        return _context.SaveChangesAsync();
     }
 
-    public async Task Delete(long id, CancellationToken ct)
+    public async Task Delete(long id)
     {
         await _context.Genres
             .Where(g => g.Id == id)
-            .ExecuteDeleteAsync(ct);
+            .ExecuteDeleteAsync();
+    }
+
+    public async Task<IEnumerable<Genre>> GetByName(string name)
+    {
+        var result = await _context.Genres
+            .AsNoTracking()
+            .Where(g => g.Name.ToLower() == name.ToLower())
+            .ToListAsync();
+        return _mapper.Map<IEnumerable<Genre>>(result);
+    }
+
+    public async Task<IEnumerable<Genre>> GetByNames(IEnumerable<string?> names)
+    {
+        names = names.Select(n => n.ToLower());
+        var result = await _context.Genres
+            .AsNoTracking()
+            .Where(g => names.Contains(g.Name.ToLower()))
+            .ToListAsync();
+        return _mapper.Map<IEnumerable<Genre>>(result);
     }
 }

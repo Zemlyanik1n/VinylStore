@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Управление альбомами</title>
+    <link rel="stylesheet" href="../styles/common.css">
+    <link rel="stylesheet" href="../styles/albums.css">
+</head>
+<body>
+<main>
+    <div class="admin-container">
+        <div class="filters-container">
+            <input type="text" id="search-input" placeholder="Поиск альбомов...">
+            <select id="sort-select">
+                <option value="">Сортировать по</option>
+                <option value="release_year_asc">Году выпуска ↑</option>
+                <option value="release_year_desc">Году выпуска ↓</option>
+                <option value="album_name_asc">Названию А-Я</option>
+                <option value="album_name_desc">Названию Я-А</option>
+                <option value="artist_name_asc">Исполнителю А-Я</option>
+                <option value="artist_name_desc">Исполнителю Я-А</option>
+            </select>
+            <button id="add-album-btn" class="btn-primary">+ Добавить альбом</button>
+        </div>
+
+        <div class="albums-list"></div>
+
+        <div class="pagination-container">
+            <button id="prev-page" class="btn-pagination">&lt;</button>
+            <span id="page-info">Страница 1 из 1</span>
+            <button id="next-page" class="btn-pagination">&gt;</button>
+        </div>
+    </div>
+    
+    <div id="add-album-modal" class="modal">
+        <div class="modal-content-add">
+            <div class="modal-header">
+                <h3>Добавить альбом</h3>
+                <span class="close">&times;</span>
+            </div>
+            <form id="add-album-form">
+                <div class="form-group">
+                    <label>Название альбома*</label>
+                    <input type="text" name="AlbumName" required minlength="2">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Исполнитель*</label>
+                        <input type="text" name="ArtistName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Год выпуска*</label>
+                        <input type="number" name="ReleaseYear" min="1900" max="2100" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Тип релиза*</label>
+                    <select name="ReleaseType" required>
+                        <option value="">Выберите тип</option>
+                        <option value="LP">Альбом</option>
+                        <option value="Single">Сингл</option>
+                        <option value="EP">EP</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание*</label>
+                    <textarea name="Description" rows="3" required></textarea>
+                </div>
+
+                <div class="dynamic-section">
+                    <div class="section-header">
+                        <h4>Треки</h4>
+                        <button type="button" class="btn-add-track">+ Добавить трек</button>
+                    </div>
+                    <div class="tracks-container"></div>
+                </div>
+
+                <div class="dynamic-section">
+                    <div class="section-header">
+                        <h4>Жанры</h4>
+                        <button type="button" class="btn-add-genre">+ Добавить жанр</button>
+                    </div>
+                    <div class="genres-container"></div>
+                </div>
+
+                <div class="form-footer">
+                    <button type="submit" class="btn-submit">Сохранить</button>
+                    <button type="button" class="btn-cancel">Отмена</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <template id="track-template">
+        <div class="track-item">
+            <input type="text" name="TrackName" placeholder="Название трека*" required>
+            <input type="number" name="DurationInSeconds" placeholder="Длительность (сек)*" min="1" required>
+            <input type="number" name="Position" placeholder="Позиция*" min="1" required>
+            <button type="button" class="btn-remove">×</button>
+        </div>
+    </template>
+
+    <template id="genre-template">
+        <div class="genre-item">
+            <input type="text" name="GenreName" placeholder="Название жанра*" required minlength="2">
+            <button type="button" class="btn-remove">×</button>
+        </div>
+    </template>
+</main>
+
+<script>
+    let currentPage = 1;
+    let totalPages = 1;
+    let isAdmin = false;
+    const pageSize = 10;
+    
+    window.addEventListener('DOMContentLoaded', async () => {
+        await checkAdmin();
+        await fetchAlbums();
+        initEventHandlers();
+        setupDynamicFormFields();
+        await loadTemplates()
+    });
+
+    async function loadTemplates() {
+        try {
+            const [header, footer, modal] = await Promise.all([
+                fetch('templates/header.html').then(r => r.text()),
+                fetch('templates/footer.html').then(r => r.text()),
+                fetch('templates/modal-profile.html').then(r => r.text())
+            ]);
+
+            document.body.insertAdjacentHTML('afterbegin', header);
+            document.body.insertAdjacentHTML('beforeend', footer);
+            document.body.insertAdjacentHTML('beforeend', modal);
+        } catch (error) {
+            console.error('Ошибка загрузки шаблонов:', error);
+        }
+    }
+
+    async function checkAdmin() {
+        try {
+            const response = await fetch("/api/auth/me", {credentials: "include"});
+            if(!response.ok) {
+                redirectToIndex();
+                return;
+            }
+
+            const user = await response.json();
+            isAdmin = user.role === 'Admin';
+
+            if(!isAdmin) redirectToIndex();
+
+            document.getElementById('add-album-btn').classList.remove('hidden');
+        } catch {
+            redirectToIndex();
+        }
+    }
+
+    function redirectToIndex() {
+        window.location.href = 'index.html';
+    }
+
+    async function fetchAlbums() {
+        try {
+            const search = document.getElementById('search-input').value;
+            const sort = document.getElementById('sort-select').value;
+            console.log(sort);
+            const url = new URL('/api/albums/catalog', window.location.origin);
+            url.search = new URLSearchParams({
+                search: search,
+                sortBy: sort,
+                page: currentPage,
+                pageSize: pageSize
+            }).toString();
+
+            const response = await fetch(url);
+
+            if(!response.ok) throw new Error('Ошибка загрузки');
+
+            const data = await response.json();
+            renderAlbums(data.items);
+            
+            currentPage = data.page;
+            totalPages = data.totalPages;
+            updatePagination(data);
+
+        } catch(error) {
+            showError(error.message);
+        }
+    }
+
+
+    document.getElementById('add-album-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+
+        try {
+            const formData = {
+                AlbumName: form.AlbumName.value.trim(),
+                ArtistName: form.ArtistName.value.trim(),
+                ReleaseYear: parseInt(form.ReleaseYear.value),
+                ReleaseType: form.ReleaseType.value,
+                Description: form.Description.value.trim(),
+                Tracks: Array.from(form.querySelectorAll('.track-item')).map(track => ({
+                    Name: track.querySelector('[name="TrackName"]').value.trim(),
+                    DurationInSeconds: parseInt(track.querySelector('[name="DurationInSeconds"]').value),
+                    Position: parseInt(track.querySelector('[name="Position"]').value)
+                })),
+                Genres: Array.from(form.querySelectorAll('.genre-item')).map(genre => ({
+                    Name: genre.querySelector('[name="GenreName"]').value.trim()
+                }))
+            };
+            
+            const errors = validateForm(formData);
+            if(errors.length > 0) {
+                showError(errors.join('<br>'));
+                return;
+            }
+            
+            const response = await fetch('/api/albums/add', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(formData),
+                credentials: 'include'
+            });
+
+            if(!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка сервера');
+            }
+            
+            document.getElementById('add-album-modal').style.display = 'none';
+            form.reset();
+            
+            document.querySelector('.tracks-container').innerHTML = '';
+            document.querySelector('.genres-container').innerHTML = '';
+            
+            currentPage = 1;
+            await fetchAlbums();
+
+        } catch(error) {
+            showError(error.message);
+        }
+    });
+
+    function initEventHandlers() {
+        document.getElementById('search-input').addEventListener('input', () => {
+            currentPage = 1;
+            fetchAlbums();
+        });
+
+        document.getElementById('sort-select').addEventListener('change', () => {
+            currentPage = 1;
+            fetchAlbums();
+        });
+        
+        const modal = document.getElementById('add-album-modal');
+        document.getElementById('add-album-btn').addEventListener('click', () => {
+            modal.style.display = 'block';
+        });
+
+        modal.querySelector('.close').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+
+        document.querySelector('.btn-cancel').addEventListener('click', () => {
+            modal.style.display = 'none';
+        });
+        
+        document.querySelector('.albums-list').addEventListener('click', async (e) => {
+            const deleteBtn = e.target.closest('.delete-btn');
+            if(deleteBtn) {
+                const confirm = await showConfirmationModal('Удалить альбом?');
+                if(confirm) {
+                    try {
+                        await fetch(`/api/albums/delete/${deleteBtn.dataset.id}`, {
+                            method: 'DELETE',
+                            credentials: 'include'
+                        });
+                        fetchAlbums();
+                    } catch(error) {
+                        showError('Ошибка удаления: ' + error.message);
+                    }
+                }
+            }
+        });
+    }
+
+    function setupDynamicFormFields() {
+        document.querySelector('.btn-add-track').addEventListener('click', () => {
+            const template = document.getElementById('track-template');
+            const clone = template.content.cloneNode(true);
+            document.querySelector('.tracks-container').appendChild(clone);
+        });
+
+        document.querySelector('.tracks-container').addEventListener('click', (e) => {
+            if(e.target.classList.contains('btn-remove')) {
+                e.target.closest('.track-item').remove();
+            }
+        });
+        
+        document.querySelector('.btn-add-genre').addEventListener('click', () => {
+            const template = document.getElementById('genre-template');
+            const clone = template.content.cloneNode(true);
+            document.querySelector('.genres-container').appendChild(clone);
+        });
+
+        document.querySelector('.genres-container').addEventListener('click', (e) => {
+            if(e.target.classList.contains('btn-remove')) {
+                e.target.closest('.genre-item').remove();
+            }
+        });
+    }
+    
+    function showError(message) {
+        const errorDiv = document.createElement('div');
+        errorDiv.className = 'error-message';
+        errorDiv.innerHTML = message;
+        document.body.appendChild(errorDiv);
+        setTimeout(() => errorDiv.remove(), 3000);
+    }
+
+    function showConfirmationModal(message) {
+        return new Promise((resolve) => {
+            const result = confirm(message);
+            resolve(result);
+        });
+    }
+
+    function renderAlbums(albums) {
+        const container = document.querySelector('.albums-list');
+        container.innerHTML = albums.map(album => `
+        <div class="album-item">
+            <div class="album-info">
+                <h3>${album.albumName}</h3>
+                <p>Исполнитель: ${album.artistName}</p>
+                <p>Год: ${album.releaseYear} • Тип: ${album.releaseType}</p>
+                <p>Жанры: ${album.genres.map(g => g.name).join(', ')}</p>
+                <div class="tracks-list">
+                    <h4>Треки:</h4>
+                    ${album.tracks.map(track => `
+                        <div class="track">
+                            <span>${track.position}. ${track.trackName}</span>
+                            <span>${formatDuration(track.duration)}</span>
+                        </div>
+                    `).join('')}
+                </div>
+                <p class="description">${album.description}</p>
+            </div>
+            ${isAdmin ? `
+            <div class="album-actions">
+                <button class="delete-btn" data-id="${album.id}">🗑️</button>
+            </div>` : ''}
+        </div>
+    `).join('');
+    }
+
+    document.getElementById('prev-page').addEventListener('click', () => {
+        if(currentPage > 1) {
+            currentPage--;
+            fetchAlbums();
+        }
+    });
+
+    document.getElementById('next-page').addEventListener('click', () => {
+        if(currentPage < totalPages) {
+            currentPage++;
+            fetchAlbums();
+        }
+    });
+
+    function updatePagination(data) {
+        const pageInfo = document.getElementById('page-info');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
+
+        pageInfo.textContent = `Страница ${data.page} из ${data.totalPages}`;
+
+        prevButton.disabled = data.page === 1;
+        nextButton.disabled = data.page === data.totalPages || data.totalPages === 0;
+    }
+    function formatDuration(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+    function validateForm(formData) {
+        const errors = [];
+        const currentYear = new Date().getFullYear();
+        
+        if (!formData.AlbumName?.trim()) errors.push('Название альбома обязательно');
+        if (!formData.ArtistName?.trim()) errors.push('Исполнитель обязателен');
+        if (!formData.ReleaseType) errors.push('Тип релиза обязателен');
+        if (!formData.Description?.trim()) errors.push('Описание обязательно');
+
+        if (!formData.ReleaseYear || formData.ReleaseYear < 1700 || formData.ReleaseYear > currentYear) {
+            errors.push(`Год выпуска должен быть между 1700 и ${currentYear}`);
+        }
+        
+        const tracks = formData.Tracks;
+        if (!tracks?.length) {
+            errors.push('Добавьте хотя бы один трек');
+        } else {
+            tracks.forEach((track, index) => {
+                if (!track.Name?.trim()) errors.push(`Трек ${index + 1}: название обязательно`);
+                if (track.DurationInSeconds < 1) errors.push(`Трек ${index + 1}: некорректная длительность`);
+                if (track.Position < 1) errors.push(`Трек ${index + 1}: некорректная позиция`);
+            });
+        }
+        
+        const genres = formData.Genres;
+        if (!genres?.length) {
+            errors.push('Добавьте хотя бы один жанр');
+        } else {
+            genres.forEach((genre, index) => {
+                if (!genre.Name?.trim()) errors.push(`Жанр ${index + 1}: название обязательно`);
+                if (genre.Name?.trim().length < 2) errors.push(`Жанр ${index + 1}: минимум 2 символа`);
+            });
+        }
+
+        return errors;
+    }
+    
+</script>
+</body>
+</html>
