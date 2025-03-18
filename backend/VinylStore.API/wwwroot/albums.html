@@ -9,6 +9,60 @@
 </head>
 <body>
 <main>
+    <div id="add-vinyl-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Добавить виниловую пластинку</h2>
+            <form id="add-vinyl-form" enctype="multipart/form-data">
+                <input type="hidden" id="vinyl-album-id" name="AlbumId">
+
+                <div class="form-group">
+                    <label>Состояние</label>
+                    <select name="Condition" required>
+                        <option value="">Выберите состояние</option>
+                        <option value="FactoryNew">Только отпечатана</option>
+                        <option value="Good">Хорошее</option>
+                        <option value="Used">Б/У</option>
+                        <option value="Bad">Плохое</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Производитель</label>
+                    <input type="text" name="Manufacturer" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Описание</label>
+                    <textarea name="Description" required></textarea>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Цена</label>
+                        <input type="number" name="Price" step="0.01" min="0.01" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Год выпуска</label>
+                        <input type="number" name="PrintYear" min="1931" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Количество на складе</label>
+                        <input type="number" name="StockCount" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Изображение</label>
+                        <input type="file" name="Image" accept="image/*" required>
+                    </div>
+                </div>
+
+                <button type="submit">Добавить</button>
+            </form>
+        </div>
+    </div>
     <div class="admin-container">
         <div class="filters-container">
             <input type="text" id="search-input" placeholder="Поиск альбомов...">
@@ -272,8 +326,15 @@
             modal.style.display = 'none';
         });
         
+        
+        
         document.querySelector('.albums-list').addEventListener('click', async (e) => {
             const deleteBtn = e.target.closest('.delete-btn');
+            const btn = e.target.closest('.add-vinyl-btn');
+            if(btn) {
+                document.getElementById('vinyl-album-id').value = btn.dataset.id;
+                document.getElementById('add-vinyl-modal').style.display = 'block';
+            }
             if(deleteBtn) {
                 const confirm = await showConfirmationModal('Удалить альбом?');
                 if(confirm) {
@@ -291,6 +352,89 @@
         });
     }
 
+    function validateVinylForm(formData) {
+        const errors = [];
+        const currentYear = new Date().getFullYear();
+        
+        if(!formData.get('Condition')) errors.push('Выберите состояние');
+        if(!formData.get('Manufacturer')?.trim()) errors.push('Производитель обязателен');
+        if(!formData.get('Description')?.trim()) errors.push('Описание обязательно');
+        
+        const price = parseFloat(formData.get('Price'));
+        if(isNaN(price)){
+            errors.push('Цена должна быть числом');
+        } else if(price <= 0) {
+            errors.push('Цена должна быть больше нуля');
+        }
+        
+        const printYear = parseInt(formData.get('PrintYear'));
+        if(isNaN(printYear)) {
+            errors.push('Год выпуска обязателен');
+        } else if(printYear < 1700 || printYear > currentYear) {
+            errors.push(`Год выпуска должен быть между 1700 и ${currentYear}`);
+        }
+        
+        const stockCount = parseInt(formData.get('StockCount'));
+        if(isNaN(stockCount)) {
+            errors.push('Укажите количество');
+        } else if(stockCount < 0) {
+            errors.push('Количество не может быть отрицательным');
+        }
+        
+        const image = formData.get('Image');
+        if(!image || image.size === 0) {
+            errors.push('Добавьте изображение');
+        } else {
+            if(!image.type.startsWith('image/')) {
+                errors.push('Файл должен быть изображением');
+            }
+            if(image.size > 5 * 1024 * 1024) {
+                errors.push('Максимальный размер изображения - 5 МБ');
+            }
+        }
+
+        return errors;
+    }
+    
+    document.getElementById('add-vinyl-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const form = e.target;
+        const formData = new FormData(form);
+        
+        const errors = validateVinylForm(formData);
+        if(errors.length > 0) {
+            showError(errors.join('<br>'));
+            return;
+        }
+
+        try {
+            const response = await fetch(`/api/vinyls/add`, {
+                method: 'POST',
+                body: formData,
+                credentials: 'include'
+            });
+
+            if(!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Ошибка сервера');
+            }
+
+            form.reset();
+            document.getElementById('add-vinyl-modal').style.display = 'none';
+            showSuccess('Пластинка успешно добавлена!');
+
+        } catch(error) {
+            showError(error.message);
+        }
+    });
+
+    function showSuccess(message) {
+        const successDiv = document.createElement('div');
+        successDiv.className = 'success-message';
+        successDiv.innerHTML = message;
+        document.body.appendChild(successDiv);
+        setTimeout(() => successDiv.remove(), 3000);
+    }
     function setupDynamicFormFields() {
         document.querySelector('.btn-add-track').addEventListener('click', () => {
             const template = document.getElementById('track-template');
@@ -354,11 +498,14 @@
             </div>
             ${isAdmin ? `
             <div class="album-actions">
+                <button class="add-vinyl-btn" data-id="${album.id}">+</button>
                 <button class="delete-btn" data-id="${album.id}">🗑️</button>
             </div>` : ''}
         </div>
     `).join('');
     }
+    
+    
 
     document.getElementById('prev-page').addEventListener('click', () => {
         if(currentPage > 1) {

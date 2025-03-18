@@ -24,7 +24,7 @@ public class Track
 
     public static Result<Track> Create(string? name, int durationInSeconds, int position)
     {
-        if(name is null)
+        if(string.IsNullOrEmpty(name))
             return Result.Failure<Track>("Name cannot be null");
         if (position < 1)
             return Result.Failure<Track>("Position cannot be less than 1");

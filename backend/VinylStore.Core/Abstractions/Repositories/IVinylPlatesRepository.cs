@@ -1,3 +1,4 @@
+using CSharpFunctionalExtensions;
 using VinylStore.Core.Abstractions.Filters;
 using VinylStore.Core.Models;
 
@@ -10,4 +11,6 @@ public interface IVinylPlatesRepository
     Task Create(VinylPlate vinylPlate, CancellationToken ct);
     Task Delete(long id, CancellationToken ct);
     Task<IEnumerable<VinylPlate>> GetSuggestions(string searchQuery, int count);
+    Task CreateAsync(VinylPlate vinylPlate, Album album);
+    Task DeleteAsync(long id);
 }

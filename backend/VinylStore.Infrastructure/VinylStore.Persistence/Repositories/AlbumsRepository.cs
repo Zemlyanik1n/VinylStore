@@ -8,7 +8,8 @@ using VinylStore.Persistence.Entities;
 
 namespace VinylStore.Persistence.Repositories;
 
-public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper, IGenresRepository genresRepository) : IAlbumsRepository
+public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper, IGenresRepository genresRepository)
+    : IAlbumsRepository
 {
     private readonly VinylStoreDbContext _context = context;
     private readonly IMapper _mapper = mapper;
@@ -40,19 +41,10 @@ public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper, IGenr
         var genreEntities = _mapper.Map<List<GenreEntity>>(genres);
         foreach (var genreEntity in genreEntities)
         {
-            var existingEntity = _context.Genres.Local
-                .FirstOrDefault(g => g.Id == genreEntity.Id);
-
-            if (existingEntity != null)
-            {
-                albumEntity.Genres.Add(existingEntity);
-            }
-            else
-            {
-                _context.Genres.Attach(genreEntity);
-                albumEntity.Genres.Add(genreEntity);
-            }
+            _context.Genres.Attach(genreEntity);
+            albumEntity.Genres.Add(genreEntity);
         }
+
         await _context.Albums.AddAsync(albumEntity);
         await _context.SaveChangesAsync();
     }
@@ -89,9 +81,9 @@ public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper, IGenr
         var totalCount = await baseQuery.CountAsync();
         var pagedQuery = ApplyPaging(baseQuery, filter);
         var items = await pagedQuery.ToListAsync();
-        
+
         var albums = _mapper.Map<IEnumerable<Album>>(items);
-        
+
         return (albums, totalCount);
     }
 
@@ -109,10 +101,10 @@ public class AlbumsRepository(VinylStoreDbContext context, IMapper mapper, IGenr
             query = query.Where(a => a.AlbumName.ToLower().Contains(search) || a.ArtistName.ToLower().Contains(search));
         }
 
-        
-        if(filter.SortBy is null)
+
+        if (filter.SortBy is null)
             return query;
-        
+
         query = filter.SortBy switch
         {
             "release_year_asc" => query.OrderBy(v => v.ReleaseYear),

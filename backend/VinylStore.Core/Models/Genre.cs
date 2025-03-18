@@ -18,7 +18,7 @@ public class Genre
 
     public static Result<Genre> Create(string? name)
     {
-        if(name is null)
+        if(string.IsNullOrEmpty(name))
             return Result.Failure<Genre>("GenreName cannot be null");
 
         var genre = new Genre(name);

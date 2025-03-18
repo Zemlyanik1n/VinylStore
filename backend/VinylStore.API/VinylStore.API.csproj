@@ -30,4 +30,8 @@
         <ProjectReference Include="..\VinylStore.Infrastructure\VinylStore.Persistence\VinylStore.Persistence.csproj"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="wwwroot\images\vinyls\" />
+    </ItemGroup>
+
 </Project>

@@ -1,5 +1,6 @@
 using System.Drawing;
 using CSharpFunctionalExtensions;
+using VinylStore.Core.Enums;
 
 namespace VinylStore.Core.Models;
 
@@ -35,21 +36,29 @@ public class Album
     public static Result<Album> Create(string? albumName, string? releaseType, string? artistName, string? description,
         int durationInSeconds, int releaseYear, ICollection<Track> tracks)
     {
-        if(albumName is null)
+        if(string.IsNullOrEmpty(albumName))
             return Result.Failure<Album>("Album name cannot be null");
-        if(releaseType is null)
-            return Result.Failure<Album>("Release type cannot be null");
-        if (artistName is null)
+        if(string.IsNullOrEmpty(releaseType) || releaseType != "Single" && releaseType != "LP" || releaseType != "EP")
+            return Result.Failure<Album>("Release type is invalid");
+        if (string.IsNullOrEmpty(artistName))
             return Result.Failure<Album>("Artist name cannot be null");
-        if (description is null)
+        if (string.IsNullOrEmpty(description))
             return Result.Failure<Album>("Description cannot be null");
         if(durationInSeconds <= 1)
             return Result.Failure<Album>("Duration cannot be less than 1");
-        if(releaseYear < 1700)
-            return Result.Failure<Album>("Release year cannot be less than 1700");
+        if(releaseYear < 1700 || releaseYear > DateTime.Now.Year)
+            return Result.Failure<Album>("Release year is out of range");
         if (tracks.Count == 0)
             return Result.Failure<Album>("Tracks cannot be empty");
 
+        var pos = 1;
+        var tracksToAdd = tracks.OrderBy(t => t.Position);
+        foreach (var track in tracksToAdd)
+        {
+            if(track.Position != pos)
+                return Result.Failure<Album>("Track positions is not valid");
+            pos++;
+        }
 
         var album = new Album(albumName, releaseType, artistName, description, durationInSeconds, releaseYear, tracks);
         

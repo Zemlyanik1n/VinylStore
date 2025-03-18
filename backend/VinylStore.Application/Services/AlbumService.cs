@@ -72,19 +72,19 @@ public class AlbumService(IAlbumsRepository albumsRepository, IGenresRepository 
         if (albumRequest.Tracks.Count == 0)
             return Result.Failure("Track list is empty");
 
-        if (albumRequest.AlbumName == null)
+        if (string.IsNullOrEmpty(albumRequest.AlbumName))
             return Result.Failure("Album name is empty");
 
-        if (albumRequest.ReleaseType == null)
+        if (string.IsNullOrEmpty(albumRequest.ArtistName))
             return Result.Failure("Release type is empty");
 
         if (albumRequest.ReleaseYear < 1700 || albumRequest.ReleaseYear > DateTime.Now.Year)
             return Result.Failure("Release year is out of range");
 
-        if (albumRequest.Description == null)
+        if (string.IsNullOrEmpty(albumRequest.Description))
             return Result.Failure("Description is empty");
 
-        if (albumRequest.ArtistName is null)
+        if (string.IsNullOrEmpty(albumRequest.ArtistName))
             return Result.Failure("Artist name is empty");
 
         var query = albumRequest.Genres.Select(g => g.Name).ToList();
@@ -120,7 +120,7 @@ public class AlbumService(IAlbumsRepository albumsRepository, IGenresRepository 
 
         await _albumsRepository.Create(albumToAdd.Value, existingGenres);
 
-        return Result.Success("album added");
+        return Result.Success();
     }
 
 }

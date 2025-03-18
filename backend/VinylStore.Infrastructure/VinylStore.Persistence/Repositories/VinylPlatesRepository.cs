@@ -129,4 +129,21 @@ public class VinylPlatesRepository(VinylStoreDbContext context, IMapper mapper) 
 
         return _mapper.Map<IEnumerable<VinylPlate>>(vinylsAlbums);
     }
+
+    public async Task CreateAsync(VinylPlate vinylPlate, Album album)
+    {
+        var albumEntity = _mapper.Map<AlbumEntity>(album);
+        var vinylPlateEntity = _mapper.Map<VinylPlateEntity>(vinylPlate);
+        _context.Albums.Attach(albumEntity);
+        vinylPlateEntity.Album = albumEntity;
+        await _context.VinylPlates.AddAsync(vinylPlateEntity);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task DeleteAsync(long id)
+    {
+        await _context.VinylPlates
+            .Where(v => v.Id == id)
+            .ExecuteDeleteAsync();
+    }
 }

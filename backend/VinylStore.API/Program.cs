@@ -1,12 +1,14 @@
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
+using Microsoft.Extensions.FileProviders;
 using VinylStore.Application.Abstractions.Auth;
 using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.Extensions;
 using VinylStore.Application.Services;
 using VinylStore.Extensions;
 using VinylStore.Infrastructure.Auth;
+using VinylStore.Infrastructure.Services;
 using VinylStore.Persistence;
 using VinylStore.Persistence.Mappings;
 using AuthorizationOptions = VinylStore.Persistence.AuthorizationOptions;
@@ -29,16 +31,25 @@ builder.Services.AddApiAuthentication(builder.Configuration); // аутенти�
 
 builder.Services.AddScoped<IJwtProvider, JwtProvider>(); // дописать exts для токенов
 builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
+
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
+builder.Services.AddScoped<IImageService, ImageService>();
 
 builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
 builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
 
 
 var app = builder.Build();
-
 app.UseStaticFiles();
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+        Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+    RequestPath = "/images"
+});
+
+
 
 app.UseCors(x =>
 {

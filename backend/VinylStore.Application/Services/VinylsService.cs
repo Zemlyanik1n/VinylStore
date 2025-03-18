@@ -1,17 +1,23 @@
-﻿using VinylStore.Application.Abstractions.Services;
+﻿using CSharpFunctionalExtensions;
+using Microsoft.AspNetCore.Http;
+using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
 using VinylStore.Application.DTOs.Responses;
 using VinylStore.Application.Queries;
 using VinylStore.Core.Abstractions.Repositories;
 using VinylStore.Core.Models;
+using VinylStore.Infrastructure.Services;
 
 namespace VinylStore.Application.Services;
 
-public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenresRepository genresRepository)
+public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenresRepository genresRepository, IImageService imageService,
+    IAlbumsRepository albumRepository)
     : IVinylsService
 {
     private readonly IVinylPlatesRepository _vinylPlatesRepository = vinylPlatesRepository;
     private readonly IGenresRepository _genresRepository = genresRepository;
+    private readonly IImageService _imageService = imageService;
+    private readonly IAlbumsRepository _albumRepository = albumRepository;
 
     public async Task<PaginatedResponse<VinylCatalogResponse>> GetFilteredPagedVinyls(VinylFilterRequest filterRequest)
     {
@@ -136,5 +142,61 @@ public class VinylsService(IVinylPlatesRepository vinylPlatesRepository, IGenres
         });
 
         return result;
+    }
+
+    private bool IsImageValid(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return false;
+
+        if (file.Length > 5 * 1024 * 1024) // 5MB
+            return false;
+
+        var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif" };
+        var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
+    
+        return allowedExtensions.Contains(extension);
+    }
+    public async Task<Result> CreateVinylPlate(CreateVinylPlateRequest request)
+    {
+        if(request.Condition is null)
+            return Result.Failure("condition cannot be null");
+        if(string.IsNullOrEmpty(request.Description))
+            return Result.Failure("description cannot be null");
+        if(string.IsNullOrEmpty(request.Manufacturer))
+            return Result.Failure("manufacturer cannot be null");
+        if(request.PrintYear < 1931 || request.PrintYear > DateTime.Now.Year)
+            return Result.Failure("print year must be between 1931 and present year");
+        if(request.Price < 0)
+            return Result.Failure("price cannot be negative");
+        if(request.StockCount < 0)
+            return Result.Failure("stock count cannot be negative");
+        if(!IsImageValid(request.Image))
+            return Result.Failure("image is not a valid image");
+            
+        var result = await _imageService.SaveImageAsync(request.Image);
+        
+        var vinylPlate = VinylPlate.Create(request.Condition, result, request.Manufacturer, request.Description,
+            request.Price, request.PrintYear, request.StockCount);
+
+        var album = await _albumRepository.GetById(request.AlbumId);
+        
+        if(album is null)
+            return Result.Failure($"album with id {request.AlbumId} not found");
+        
+        if (vinylPlate.IsFailure)
+        {
+            _imageService.DeleteImage(result);
+            return Result.Failure(vinylPlate.Error);
+        }
+
+        await _vinylPlatesRepository.CreateAsync(vinylPlate.Value, album);
+        return Result.Success();
+    }
+
+    public async Task<Result> DeleteVinylPlate(long id)
+    {
+        await _vinylPlatesRepository.DeleteAsync(id);
+        return Result.Success("plate deleted");
     }
 }

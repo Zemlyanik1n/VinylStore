@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.DTOs.Requests;
+using VinylStore.Attributes;
+using VinylStore.Core.Enums;
 
 namespace VinylStore.Controllers;
 
@@ -78,5 +81,29 @@ public class VinylsController(IVinylsService vinylsService) : ControllerBase
         {
             return StatusCode(500, e.Message);
         }
+    }
+
+    [Authorize]
+    [HasPermission(Permissions.CreateVinyls)]
+    [HttpPost("add")]
+    public async Task<IActionResult> CreateVinylPlate(
+        [FromForm] CreateVinylPlateRequest request)
+    {
+        var result = await _vinylsService.CreateVinylPlate(request);
+        if(result.IsFailure)
+            return BadRequest(result.Error);
+        return Ok("album created");
+    }
+
+    
+    [Authorize]
+    [HasPermission(Permissions.DeleteVinyls)]
+    [HttpDelete("delete/{id:long}")]
+    public async Task<IActionResult> DeleteVinylPlate(long id)
+    {
+        var result = await _vinylsService.DeleteVinylPlate(id);
+        if(result.IsFailure)
+            return BadRequest(result.Error);
+        return Ok(result);
     }
 }
