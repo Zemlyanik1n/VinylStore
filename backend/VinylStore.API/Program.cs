@@ -1,44 +1,25 @@
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.Extensions.FileProviders;
-using VinylStore.Application.Abstractions.Auth;
-using VinylStore.Application.Abstractions.Services;
 using VinylStore.Application.Extensions;
-using VinylStore.Application.Services;
 using VinylStore.Extensions;
-using VinylStore.Infrastructure.Auth;
-using VinylStore.Infrastructure.Services;
+using VinylStore.Infrastructure.Extensions;
 using VinylStore.Persistence;
 using VinylStore.Persistence.Mappings;
-using AuthorizationOptions = VinylStore.Persistence.AuthorizationOptions;
 
 var builder = WebApplication.CreateBuilder(args);
+var services = builder.Services;
+var configuration = builder.Configuration;
 
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-
-builder.Services.Configure<JwtOptions>(
-    builder.Configuration.GetSection(nameof(JwtOptions))); // дописать exts для токенов
-builder.Services.Configure<AuthorizationOptions>(
-    builder.Configuration.GetSection(nameof(AuthorizationOptions))); // дописать exts для токенов
-
-builder.Services.AddPersistence(builder.Configuration); // бд
-builder.Services.AddApplication(); // сервисы
-builder.Services.AddAutoMapper(typeof(DataBaseMappings));
-builder.Services.AddSwaggerDocumentation();
-builder.Services.AddApiAuthentication(builder.Configuration); // аутентификация
-
-builder.Services.AddScoped<IJwtProvider, JwtProvider>(); // дописать exts для токенов
-builder.Services.AddScoped<IPasswordHasher, PasswordHasher>();
-
-builder.Services.AddHttpContextAccessor();
-builder.Services.AddScoped<ICurrentUserService, CurrentUserService>();
-builder.Services.AddScoped<IImageService, ImageService>();
-
-builder.Services.AddSingleton<IAuthorizationPolicyProvider, PermissionPolicyProvider>();
-builder.Services.AddScoped<IAuthorizationHandler, PermissionAuthorizationHandler>();
-
+services.AddControllers();
+services.AddEndpointsApiExplorer();
+services.AddAuthInfrastructure(configuration);
+services.AddInfrastructureServices();
+services.AddPersistence(builder.Configuration); // бд
+services.AddApplication(); // сервисы
+services.AddAutoMapper(typeof(DataBaseMappings));
+services.AddSwaggerDocumentation();
+services.AddApiAuthentication(configuration); // аутентификация
+services.AddHttpContextAccessor();
 
 var app = builder.Build();
 app.UseStaticFiles();
@@ -48,8 +29,6 @@ app.UseStaticFiles(new StaticFileOptions
         Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
     RequestPath = "/images"
 });
-
-
 
 app.UseCors(x =>
 {
