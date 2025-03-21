@@ -275,7 +275,7 @@
                 showError(errors.join('<br>'));
                 return;
             }
-            
+
             const response = await fetch('/api/albums/add', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -283,9 +283,23 @@
                 credentials: 'include'
             });
 
-            if(!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Ошибка сервера');
+            if (!response.ok) {
+                const contentType = response.headers.get('content-type');
+                let errorData;
+
+                if (contentType && contentType.includes('application/json')) {
+                    errorData = await response.json();
+                } else {
+                    errorData = { message: await response.text() };
+                }
+                
+                console.error('Error details:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    errorData
+                });
+
+                throw new Error(errorData.message || errorData.error || 'Неизвестная ошибка сервера');
             }
             
             document.getElementById('add-album-modal').style.display = 'none';

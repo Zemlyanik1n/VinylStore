@@ -38,7 +38,7 @@ public class Album
     {
         if(string.IsNullOrEmpty(albumName))
             return Result.Failure<Album>("Album name cannot be null");
-        if(string.IsNullOrEmpty(releaseType) || releaseType != "Single" && releaseType != "LP" || releaseType != "EP")
+        if(string.IsNullOrEmpty(releaseType) || (releaseType != "Single" && releaseType != "LP" && releaseType != "EP"))
             return Result.Failure<Album>("Release type is invalid");
         if (string.IsNullOrEmpty(artistName))
             return Result.Failure<Album>("Artist name cannot be null");

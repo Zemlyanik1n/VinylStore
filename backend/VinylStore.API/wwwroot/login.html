@@ -77,8 +77,7 @@
                         password: document.getElementById("password").value
                     })
                 });
-
-                if (!response.ok) throw new Error((await response.json()).message || "Ошибка входа");
+                if (!response.ok) throw new Error("Ошибка входа");
 
                 alert("Вход выполнен успешно!");
                 window.location.href = "index.html";
